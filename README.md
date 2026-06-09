@@ -1,6 +1,66 @@
-# Getting Started with Create React App
+# Nakshatra Name Finder
+
+A web application that finds your birth star (Nakshatra) based on your birth details and suggests traditional Sanskrit/Indian names based on the sacred syllables.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Setup
+
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Create a `.env` file in the root directory:
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Add your Gemini API key to the `.env` file:
+   ```
+   GEMINI_API_KEY=your_actual_api_key_here
+   ```
+   Get your API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+
+## Local Development with Vercel Dev
+
+To test the serverless API locally:
+
+1. Install Vercel CLI (if not already installed):
+   ```bash
+   npm install -g vercel
+   ```
+
+2. Run the development server:
+   ```bash
+   vercel dev
+   ```
+
+This will start both the React app and the serverless API functions locally.
+
+## Deploying to Vercel
+
+This app is designed to work seamlessly with Vercel:
+
+1. Push your code to GitHub
+
+2. Import your repository in [Vercel](https://vercel.com)
+
+3. Add the environment variable in Vercel:
+   - Go to your project settings
+   - Navigate to "Environment Variables"
+   - Add `GEMINI_API_KEY` with your Google Gemini API key
+   - Make sure to add it for Production, Preview, and Development environments
+
+4. Deploy!
+
+The `/api` directory contains serverless functions that will automatically be deployed by Vercel.
+
+### Important Notes
+
+- The API key is **never exposed** to the frontend
+- All API calls to Gemini are made securely from the serverless backend
+- The `/api/generate-names` endpoint handles all name generation requests
 
 ## Available Scripts
 

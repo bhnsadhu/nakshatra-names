@@ -98,29 +98,19 @@ async function getTimezone(lat, lon) {
 }
 
 async function generateNames(nakshatra, gender) {
-  const genderText = gender === 'any' ? 'both boys and girls (mix)' : `${gender}s`;
-  const prompt = `You are an expert in Sanskrit names and Vedic tradition. A baby is born under nakshatra ${nakshatra.name}, ruled by ${nakshatra.planet}, deity ${nakshatra.deity}. Quality: ${nakshatra.quality}. Sacred syllables: ${nakshatra.syllables.join(', ')}.
-
-Generate exactly 8 beautiful Sanskrit/Indian names for ${genderText}. Each must start with one of the syllables. Use a variety of syllables.
-
-Respond ONLY with a JSON array, no markdown, no preamble:
-[{"name":"...","meaning":"...","syllable":"...","gender":"boy/girl/neutral"},...]
-
-Make meanings poetic and accurate. Names should feel timeless.`;
-
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
+  const res = await fetch("/api/generate-names", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 1000,
-      messages: [{ role: "user", content: prompt }]
-    })
+    body: JSON.stringify({ nakshatra, gender })
   });
+
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.message || 'Failed to generate names');
+  }
+
   const data = await res.json();
-  const text = data.content.map(i => i.text || "").join("");
-  const clean = text.replace(/```json|```/g, "").trim();
-  return JSON.parse(clean);
+  return data.names;
 }
 
 export default function App() {
