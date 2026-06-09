@@ -42,7 +42,6 @@ function getLahiriAyanamsa(jd) {
 
 function getMoonLongitude(date) {
   const toRad = d => d * Math.PI / 180;
-  const toDeg = r => r * 180 / Math.PI;
   const JD = date.getTime() / 86400000 + 2440587.5;
   const T = (JD - 2451545.0) / 36525;
   let L = 218.3164477 + 481267.88123421 * T - 0.0015786 * T * T + T * T * T / 538841 - T * T * T * T / 65194000;
@@ -77,8 +76,8 @@ function getMoonLongitude(date) {
 
 function getNakshatraFromLon(siderealLon) {
   const span = 360 / 27;
-  const idx = Math.floor(siderealLon / span);
   const posInNak = siderealLon % span;
+  const idx = Math.floor(siderealLon / span);
   const pada = Math.floor(posInNak / (span / 4)) + 1;
   return { nakshatra: NAKSHATRAS[idx], pada, longitude: siderealLon };
 }
@@ -89,7 +88,7 @@ async function geocodeCity(city) {
   });
   const data = await res.json();
   if (!data.length) throw new Error("City not found. Please try a different name.");
-  return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon), display: data[0].display_name };
+  return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
 }
 
 async function getTimezone(lat, lon) {
@@ -146,16 +145,9 @@ export default function App() {
     try {
       const geo = await geocodeCity(form.city);
       const tz = await getTimezone(geo.lat, geo.lon);
-      const dtStr = `${form.date}T${form.time}:00`;
-      const birthDate = new Date(new Intl.DateTimeFormat('en-US', {
-        timeZone: tz,
-        year: 'numeric', month: '2-digit', day: '2-digit',
-        hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
-      }).format(new Date(dtStr)));
-
-      const { sidereal, ayanamsa } = getMoonLongitude(new Date(dtStr));
+      const { sidereal, ayanamsa } = getMoonLongitude(new Date(`${form.date}T${form.time}:00`));
       const { nakshatra, pada, longitude } = getNakshatraFromLon(sidereal);
-      setResult({ nakshatra, pada, longitude, ayanamsa, geo, tz });
+      setResult({ nakshatra, pada, longitude, ayanamsa, tz });
       setLoading(false);
       setLoadingNames(true);
       const nameList = await generateNames(nakshatra, form.gender);
