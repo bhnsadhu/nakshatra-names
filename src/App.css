@@ -271,6 +271,48 @@ textarea { resize: vertical; min-height: 130px; }
   line-height: 1.6;
 }
 
+/* ── MULTI-SELECT ROW (date / time dropdowns) ── */
+.multi-select-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.5fr;
+  gap: 8px;
+}
+
+.multi-select-row.time-cols {
+  grid-template-columns: 1fr 1.5fr 1fr;
+}
+
+/* ── CITY AUTOCOMPLETE ── */
+.city-wrap {
+  position: relative;
+}
+
+.city-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #141414;
+  border: 1px solid #2A2A2A;
+  border-radius: 8px;
+  z-index: 100;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.city-option {
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #F5F0FF;
+  cursor: pointer;
+  border-bottom: 1px solid #1E1E1E;
+  line-height: 1.4;
+  transition: background 0.1s;
+}
+
+.city-option:last-child { border-bottom: none; }
+.city-option:hover { background: #1F1F1F; }
+
 /* ── NAMES ── */
 .names-title {
   font-size: 11px;
@@ -481,6 +523,8 @@ textarea { resize: vertical; min-height: 130px; }
 
   .form-grid { grid-template-columns: 1fr; }
   .form-group.full { grid-column: 1; }
+
+  .multi-select-row { grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
 
   .meta-grid { grid-template-columns: 1fr; }
   .meta-item.full { grid-column: 1; }

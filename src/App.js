@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
 
 const NAKSHATRAS = [
@@ -111,6 +111,77 @@ async function generateNames(nakshatra, gender) {
 
   const data = await res.json();
   return data.names;
+}
+
+// ── CITY AUTOCOMPLETE INPUT ───────────────────────────────────────────────────
+
+function CityInput({ value, onChange }) {
+  const [query, setQuery] = useState(value);
+  const [suggestions, setSuggestions] = useState([]);
+  const [open, setOpen] = useState(false);
+  const timerRef = useRef(null);
+  const wrapperRef = useRef(null);
+
+  useEffect(() => {
+    function handleOutsideClick(e) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, []);
+
+  const handleChange = (e) => {
+    const val = e.target.value;
+    setQuery(val);
+    onChange(val);
+    clearTimeout(timerRef.current);
+    if (val.length < 3) {
+      setSuggestions([]);
+      setOpen(false);
+      return;
+    }
+    timerRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val)}&format=json&limit=5`,
+          { headers: { 'User-Agent': 'NakshatraApp/1.0' } }
+        );
+        const data = await res.json();
+        setSuggestions(data);
+        setOpen(data.length > 0);
+      } catch {}
+    }, 350);
+  };
+
+  const select = (item) => {
+    setQuery(item.display_name);
+    onChange(item.display_name);
+    setSuggestions([]);
+    setOpen(false);
+  };
+
+  return (
+    <div className="city-wrap" ref={wrapperRef}>
+      <input
+        type="text"
+        placeholder="e.g. Mumbai, India"
+        value={query}
+        onChange={handleChange}
+        autoComplete="off"
+      />
+      {open && (
+        <div className="city-dropdown">
+          {suggestions.map((s, i) => (
+            <div key={i} className="city-option" onMouseDown={() => select(s)}>
+              {s.display_name}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 // ── SCIENCE TAB ──────────────────────────────────────────────────────────────
@@ -279,9 +350,24 @@ function AskTab() {
 
 // ── MAIN APP ─────────────────────────────────────────────────────────────────
 
+const MONTHS = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
+
+const MINUTES = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'];
+
 export default function App() {
   const [tab, setTab] = useState('generator');
-  const [form, setForm] = useState({ date: '', time: '', city: '', gender: 'any' });
+
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
+
+  const [form, setForm] = useState({
+    dateMonth: '', dateDay: '', dateYear: '',
+    timeHour: '', timeMinute: '00', timeAmPm: 'AM',
+    city: '', gender: 'male'
+  });
   const [loading, setLoading] = useState(false);
   const [loadingNames, setLoadingNames] = useState(false);
   const [error, setError] = useState('');
@@ -290,8 +376,25 @@ export default function App() {
 
   const update = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
+  const buildDateTime = () => {
+    const { dateMonth, dateDay, dateYear, timeHour, timeMinute, timeAmPm } = form;
+    const MM = String(dateMonth).padStart(2, '0');
+    const DD = String(dateDay).padStart(2, '0');
+    const dateStr = `${dateYear}-${MM}-${DD}`;
+    let hour = parseInt(timeHour, 10);
+    if (timeAmPm === 'AM') {
+      if (hour === 12) hour = 0;
+    } else {
+      if (hour !== 12) hour += 12;
+    }
+    const HH = String(hour).padStart(2, '0');
+    const timeStr = `${HH}:${timeMinute}`;
+    return { dateStr, timeStr };
+  };
+
   const calculate = async () => {
-    if (!form.date || !form.time || !form.city) {
+    const { dateMonth, dateDay, dateYear, timeHour, city } = form;
+    if (!dateMonth || !dateDay || !dateYear || !timeHour || !city) {
       setError('Please fill in all fields.');
       return;
     }
@@ -300,9 +403,10 @@ export default function App() {
     setResult(null);
     setNames([]);
     try {
-      const geo = await geocodeCity(form.city);
+      const geo = await geocodeCity(city);
       const tz = await getTimezone(geo.lat, geo.lon);
-      const { sidereal, ayanamsa } = getMoonLongitude(new Date(`${form.date}T${form.time}:00`));
+      const { dateStr, timeStr } = buildDateTime();
+      const { sidereal, ayanamsa } = getMoonLongitude(new Date(`${dateStr}T${timeStr}:00`));
       const { nakshatra, pada, longitude } = getNakshatraFromLon(sidereal);
       setResult({ nakshatra, pada, longitude, ayanamsa, tz });
       setLoading(false);
@@ -360,26 +464,65 @@ export default function App() {
 
           <div className="card">
             <div className="form-grid">
-              <div className="form-group">
+
+              <div className="form-group full">
                 <label>Date of birth</label>
-                <input type="date" value={form.date} onChange={e => update('date', e.target.value)} />
+                <div className="multi-select-row">
+                  <select value={form.dateMonth} onChange={e => update('dateMonth', e.target.value)}>
+                    <option value="">Month</option>
+                    {MONTHS.map((m, i) => (
+                      <option key={m} value={i + 1}>{m}</option>
+                    ))}
+                  </select>
+                  <select value={form.dateDay} onChange={e => update('dateDay', e.target.value)}>
+                    <option value="">Day</option>
+                    {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                  </select>
+                  <select value={form.dateYear} onChange={e => update('dateYear', e.target.value)}>
+                    <option value="">Year</option>
+                    {years.map(y => (
+                      <option key={y} value={y}>{y}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
-              <div className="form-group">
+
+              <div className="form-group full">
                 <label>Time of birth</label>
-                <input type="time" value={form.time} onChange={e => update('time', e.target.value)} />
+                <div className="multi-select-row">
+                  <select value={form.timeHour} onChange={e => update('timeHour', e.target.value)}>
+                    <option value="">Hour</option>
+                    {Array.from({ length: 12 }, (_, i) => i + 1).map(h => (
+                      <option key={h} value={h}>{h}</option>
+                    ))}
+                  </select>
+                  <select value={form.timeMinute} onChange={e => update('timeMinute', e.target.value)}>
+                    {MINUTES.map(m => (
+                      <option key={m} value={m}>{m}</option>
+                    ))}
+                  </select>
+                  <select value={form.timeAmPm} onChange={e => update('timeAmPm', e.target.value)}>
+                    <option value="AM">AM</option>
+                    <option value="PM">PM</option>
+                  </select>
+                </div>
               </div>
+
               <div className="form-group full">
                 <label>City of birth</label>
-                <input type="text" placeholder="e.g. Mumbai, India" value={form.city} onChange={e => update('city', e.target.value)} />
+                <CityInput value={form.city} onChange={v => update('city', v)} />
               </div>
+
               <div className="form-group full">
                 <label>Gender (for name suggestions)</label>
                 <select value={form.gender} onChange={e => update('gender', e.target.value)}>
-                  <option value="any">Any / neutral</option>
-                  <option value="girl">Girl</option>
-                  <option value="boy">Boy</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
                 </select>
               </div>
+
             </div>
             <button className="btn" onClick={calculate} disabled={loading}>
               {loading ? 'Calculating...' : 'Find nakshatra & names'}
@@ -430,10 +573,7 @@ export default function App() {
               {loadingNames && <div className="loading">Generating names...</div>}
               {names.map((n, i) => (
                 <div key={i} className="name-item">
-                  <div className="name-row">
-                    <span className="name-text">{n.name}</span>
-                    <span className="name-gender">{n.gender}</span>
-                  </div>
+                  <div className="name-text">{n.name}</div>
                   <div className="name-meaning">{n.meaning}</div>
                 </div>
               ))}
