@@ -140,8 +140,12 @@ export default function App() {
       setResult({ nakshatra, pada, longitude, ayanamsa, tz });
       setLoading(false);
       setLoadingNames(true);
-      const nameList = await generateNames(nakshatra, form.gender);
-      setNames(nameList);
+      try {
+        const nameList = await generateNames(nakshatra, form.gender);
+        setNames(nameList);
+      } catch {
+        setError('Name suggestions are unavailable right now. Please try again later.');
+      }
     } catch (e) {
       setError(e.message || 'Something went wrong.');
     }
@@ -156,8 +160,8 @@ export default function App() {
     try {
       const nameList = await generateNames(result.nakshatra, form.gender);
       setNames(nameList);
-    } catch (e) {
-      setError('Could not generate names.');
+    } catch {
+      setError('Name suggestions are unavailable right now. Please try again later.');
     }
     setLoadingNames(false);
   };

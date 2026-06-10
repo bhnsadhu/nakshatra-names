@@ -1,21 +1,16 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
-
 module.exports = async function handler(req, res) {
-  // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Validate API key is configured
-  if (!process.env.GEMINI_API_KEY) {
-    console.error('GEMINI_API_KEY is not configured');
+  if (!process.env.MISTRAL_API_KEY) {
+    console.error('MISTRAL_API_KEY is not configured');
     return res.status(500).json({ error: 'API key not configured' });
   }
 
   try {
     const { nakshatra, gender } = req.body;
 
-    // Validate input
     if (!nakshatra || !nakshatra.name || !gender) {
       return res.status(400).json({ error: 'Missing required fields: nakshatra and gender' });
     }
@@ -30,11 +25,25 @@ Respond ONLY with a JSON array, no markdown, no preamble:
 
 Make meanings poetic and accurate. Names should feel timeless.`;
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+    const apiRes = await fetch('https://api.mistral.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.MISTRAL_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'mistral-small-latest',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 1000
+      })
+    });
 
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    if (!apiRes.ok) {
+      throw new Error(`Mistral API error: ${apiRes.status}`);
+    }
+
+    const data = await apiRes.json();
+    const text = data.choices[0].message.content;
     const clean = text.replace(/```json|```/g, '').trim();
     const names = JSON.parse(clean);
 

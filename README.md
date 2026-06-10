@@ -16,11 +16,11 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
    cp .env.example .env
    ```
 
-3. Add your Gemini API key to the `.env` file:
+3. Add your Mistral API key to the `.env` file:
    ```
-   GEMINI_API_KEY=your_actual_api_key_here
+   MISTRAL_API_KEY=your_actual_api_key_here
    ```
-   Get your API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+   Get your API key from [Mistral Console](https://console.mistral.ai/api-keys).
 
 ## Local Development with Vercel Dev
 
@@ -49,7 +49,7 @@ This app is designed to work seamlessly with Vercel:
 3. Add the environment variable in Vercel:
    - Go to your project settings
    - Navigate to "Environment Variables"
-   - Add `GEMINI_API_KEY` with your Google Gemini API key
+   - Add `MISTRAL_API_KEY` with your Mistral API key
    - Make sure to add it for Production, Preview, and Development environments
 
 4. Deploy!
@@ -59,7 +59,7 @@ The `/api` directory contains serverless functions that will automatically be de
 ### Important Notes
 
 - The API key is **never exposed** to the frontend
-- All API calls to Gemini are made securely from the serverless backend
+- All API calls to Mistral are made securely from the serverless backend
 - The `/api/generate-names` endpoint handles all name generation requests
 
 ## Available Scripts
