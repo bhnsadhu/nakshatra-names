@@ -1,5 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import './App.css';
+
+// ── STATIC DATA ───────────────────────────────────────────────────────────────
 
 const NAKSHATRAS = [
   { name: "Ashwini", deity: "Ashwini Kumaras", planet: "Ketu", quality: "Swift, energetic, healing", syllables: ["Chu", "Che", "Cho", "La"] },
@@ -30,6 +32,452 @@ const NAKSHATRAS = [
   { name: "Uttara Bhadrapada", deity: "Ahir Budhnya", planet: "Saturn", quality: "Wise, stable, deep", syllables: ["Du", "Tha", "Jha", "Na"] },
   { name: "Revati", deity: "Pushan", planet: "Mercury", quality: "Nurturing, compassionate, spiritual", syllables: ["De", "Do", "Cha", "Chi"] }
 ];
+
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MINUTES = ['00','05','10','15','20','25','30','35','40','45','50','55'];
+const CURRENT_YEAR = new Date().getFullYear();
+const YEARS = Array.from({ length: 100 }, (_, i) => CURRENT_YEAR - i);
+
+const TIME_PERIODS = [
+  { id: 'morning',   label: 'Morning',       sub: '6 AM – 12 PM', midpoint: '06:00' },
+  { id: 'afternoon', label: 'Afternoon',      sub: '12 PM – 6 PM', midpoint: '13:00' },
+  { id: 'evening',   label: 'Evening',        sub: '6 PM – 10 PM', midpoint: '18:00' },
+  { id: 'night',     label: 'Night',          sub: '10 PM – 6 AM', midpoint: '22:00' },
+  { id: 'unknown',   label: "I don't know",   sub: '',             midpoint: '12:00' },
+];
+
+const GEO_DATA = {
+  AR: { name: 'Argentina', states: [
+    { name: 'Buenos Aires',   tz: 'America/Argentina/Buenos_Aires' },
+    { name: 'Córdoba',        tz: 'America/Argentina/Cordoba' },
+    { name: 'Mendoza',        tz: 'America/Argentina/Mendoza' },
+    { name: 'Salta',          tz: 'America/Argentina/Salta' },
+    { name: 'Tucumán',        tz: 'America/Argentina/Tucuman' },
+    { name: 'Other',          tz: 'America/Argentina/Buenos_Aires' },
+  ]},
+  AU: { name: 'Australia', states: [
+    { name: 'New South Wales',              tz: 'Australia/Sydney' },
+    { name: 'Victoria',                     tz: 'Australia/Melbourne' },
+    { name: 'Queensland',                   tz: 'Australia/Brisbane' },
+    { name: 'South Australia',              tz: 'Australia/Adelaide' },
+    { name: 'Western Australia',            tz: 'Australia/Perth' },
+    { name: 'Tasmania',                     tz: 'Australia/Hobart' },
+    { name: 'Northern Territory',           tz: 'Australia/Darwin' },
+    { name: 'Australian Capital Territory', tz: 'Australia/Sydney' },
+  ]},
+  BD: { name: 'Bangladesh', states: [
+    { name: 'Dhaka',      tz: 'Asia/Dhaka' },
+    { name: 'Chittagong', tz: 'Asia/Dhaka' },
+    { name: 'Rajshahi',   tz: 'Asia/Dhaka' },
+    { name: 'Khulna',     tz: 'Asia/Dhaka' },
+    { name: 'Sylhet',     tz: 'Asia/Dhaka' },
+    { name: 'Rangpur',    tz: 'Asia/Dhaka' },
+    { name: 'Barisal',    tz: 'Asia/Dhaka' },
+    { name: 'Mymensingh', tz: 'Asia/Dhaka' },
+  ]},
+  BR: { name: 'Brazil', states: [
+    { name: 'Acre',                    tz: 'America/Rio_Branco' },
+    { name: 'Alagoas',                 tz: 'America/Maceio' },
+    { name: 'Amazonas',                tz: 'America/Manaus' },
+    { name: 'Bahia',                   tz: 'America/Bahia' },
+    { name: 'Ceará',                   tz: 'America/Fortaleza' },
+    { name: 'Distrito Federal',        tz: 'America/Sao_Paulo' },
+    { name: 'Espírito Santo',          tz: 'America/Sao_Paulo' },
+    { name: 'Goiás',                   tz: 'America/Sao_Paulo' },
+    { name: 'Maranhão',                tz: 'America/Fortaleza' },
+    { name: 'Mato Grosso',             tz: 'America/Cuiaba' },
+    { name: 'Mato Grosso do Sul',      tz: 'America/Campo_Grande' },
+    { name: 'Minas Gerais',            tz: 'America/Sao_Paulo' },
+    { name: 'Pará',                    tz: 'America/Belem' },
+    { name: 'Paraíba',                 tz: 'America/Fortaleza' },
+    { name: 'Paraná',                  tz: 'America/Sao_Paulo' },
+    { name: 'Pernambuco',              tz: 'America/Recife' },
+    { name: 'Piauí',                   tz: 'America/Fortaleza' },
+    { name: 'Rio de Janeiro',          tz: 'America/Sao_Paulo' },
+    { name: 'Rio Grande do Norte',     tz: 'America/Fortaleza' },
+    { name: 'Rio Grande do Sul',       tz: 'America/Sao_Paulo' },
+    { name: 'Rondônia',                tz: 'America/Porto_Velho' },
+    { name: 'Roraima',                 tz: 'America/Boa_Vista' },
+    { name: 'Santa Catarina',          tz: 'America/Sao_Paulo' },
+    { name: 'São Paulo',               tz: 'America/Sao_Paulo' },
+    { name: 'Sergipe',                 tz: 'America/Maceio' },
+    { name: 'Tocantins',               tz: 'America/Araguaina' },
+  ]},
+  CA: { name: 'Canada', states: [
+    { name: 'Alberta',                    tz: 'America/Edmonton' },
+    { name: 'British Columbia',           tz: 'America/Vancouver' },
+    { name: 'Manitoba',                   tz: 'America/Winnipeg' },
+    { name: 'New Brunswick',              tz: 'America/Moncton' },
+    { name: 'Newfoundland and Labrador',  tz: 'America/St_Johns' },
+    { name: 'Northwest Territories',      tz: 'America/Yellowknife' },
+    { name: 'Nova Scotia',                tz: 'America/Halifax' },
+    { name: 'Nunavut',                    tz: 'America/Iqaluit' },
+    { name: 'Ontario',                    tz: 'America/Toronto' },
+    { name: 'Prince Edward Island',       tz: 'America/Halifax' },
+    { name: 'Quebec',                     tz: 'America/Toronto' },
+    { name: 'Saskatchewan',               tz: 'America/Regina' },
+    { name: 'Yukon',                      tz: 'America/Whitehorse' },
+  ]},
+  CN: { name: 'China', states: [
+    { name: 'Beijing',       tz: 'Asia/Shanghai' },
+    { name: 'Chongqing',     tz: 'Asia/Shanghai' },
+    { name: 'Fujian',        tz: 'Asia/Shanghai' },
+    { name: 'Guangdong',     tz: 'Asia/Shanghai' },
+    { name: 'Hebei',         tz: 'Asia/Shanghai' },
+    { name: 'Henan',         tz: 'Asia/Shanghai' },
+    { name: 'Hubei',         tz: 'Asia/Shanghai' },
+    { name: 'Hunan',         tz: 'Asia/Shanghai' },
+    { name: 'Jiangsu',       tz: 'Asia/Shanghai' },
+    { name: 'Liaoning',      tz: 'Asia/Shanghai' },
+    { name: 'Shandong',      tz: 'Asia/Shanghai' },
+    { name: 'Shanghai',      tz: 'Asia/Shanghai' },
+    { name: 'Sichuan',       tz: 'Asia/Shanghai' },
+    { name: 'Tianjin',       tz: 'Asia/Shanghai' },
+    { name: 'Xinjiang',      tz: 'Asia/Urumqi' },
+    { name: 'Yunnan',        tz: 'Asia/Shanghai' },
+    { name: 'Zhejiang',      tz: 'Asia/Shanghai' },
+    { name: 'Other',         tz: 'Asia/Shanghai' },
+  ]},
+  CO: { name: 'Colombia', states: [
+    { name: 'Antioquia',       tz: 'America/Bogota' },
+    { name: 'Atlántico',       tz: 'America/Bogota' },
+    { name: 'Bogotá D.C.',     tz: 'America/Bogota' },
+    { name: 'Cundinamarca',    tz: 'America/Bogota' },
+    { name: 'Valle del Cauca', tz: 'America/Bogota' },
+    { name: 'Other',           tz: 'America/Bogota' },
+  ]},
+  EG: { name: 'Egypt', states: [
+    { name: 'Cairo',       tz: 'Africa/Cairo' },
+    { name: 'Alexandria',  tz: 'Africa/Cairo' },
+    { name: 'Giza',        tz: 'Africa/Cairo' },
+    { name: 'Luxor',       tz: 'Africa/Cairo' },
+    { name: 'Aswan',       tz: 'Africa/Cairo' },
+    { name: 'Other',       tz: 'Africa/Cairo' },
+  ]},
+  ET: { name: 'Ethiopia', states: [
+    { name: 'Addis Ababa', tz: 'Africa/Addis_Ababa' },
+    { name: 'Amhara',      tz: 'Africa/Addis_Ababa' },
+    { name: 'Oromia',      tz: 'Africa/Addis_Ababa' },
+    { name: 'SNNPR',       tz: 'Africa/Addis_Ababa' },
+    { name: 'Tigray',      tz: 'Africa/Addis_Ababa' },
+    { name: 'Other',       tz: 'Africa/Addis_Ababa' },
+  ]},
+  FR: { name: 'France', states: [
+    { name: 'Île-de-France (Paris)',        tz: 'Europe/Paris' },
+    { name: 'Auvergne-Rhône-Alpes',         tz: 'Europe/Paris' },
+    { name: 'Nouvelle-Aquitaine',           tz: 'Europe/Paris' },
+    { name: 'Occitanie',                    tz: 'Europe/Paris' },
+    { name: 'Hauts-de-France',              tz: 'Europe/Paris' },
+    { name: 'Grand Est',                    tz: 'Europe/Paris' },
+    { name: 'Pays de la Loire',             tz: 'Europe/Paris' },
+    { name: 'Normandie',                    tz: 'Europe/Paris' },
+    { name: "Provence-Alpes-Côte d'Azur",   tz: 'Europe/Paris' },
+    { name: 'Bretagne',                     tz: 'Europe/Paris' },
+    { name: 'Other',                        tz: 'Europe/Paris' },
+  ]},
+  DE: { name: 'Germany', states: [
+    { name: 'Baden-Württemberg',     tz: 'Europe/Berlin' },
+    { name: 'Bavaria',               tz: 'Europe/Berlin' },
+    { name: 'Berlin',                tz: 'Europe/Berlin' },
+    { name: 'Brandenburg',           tz: 'Europe/Berlin' },
+    { name: 'Bremen',                tz: 'Europe/Berlin' },
+    { name: 'Hamburg',               tz: 'Europe/Berlin' },
+    { name: 'Hesse',                 tz: 'Europe/Berlin' },
+    { name: 'Lower Saxony',          tz: 'Europe/Berlin' },
+    { name: 'North Rhine-Westphalia',tz: 'Europe/Berlin' },
+    { name: 'Rhineland-Palatinate',  tz: 'Europe/Berlin' },
+    { name: 'Saxony',                tz: 'Europe/Berlin' },
+    { name: 'Thuringia',             tz: 'Europe/Berlin' },
+    { name: 'Other',                 tz: 'Europe/Berlin' },
+  ]},
+  IN: { name: 'India', states: [
+    { name: 'Andhra Pradesh',    tz: 'Asia/Kolkata' },
+    { name: 'Arunachal Pradesh', tz: 'Asia/Kolkata' },
+    { name: 'Assam',             tz: 'Asia/Kolkata' },
+    { name: 'Bihar',             tz: 'Asia/Kolkata' },
+    { name: 'Chhattisgarh',      tz: 'Asia/Kolkata' },
+    { name: 'Delhi',             tz: 'Asia/Kolkata' },
+    { name: 'Goa',               tz: 'Asia/Kolkata' },
+    { name: 'Gujarat',           tz: 'Asia/Kolkata' },
+    { name: 'Haryana',           tz: 'Asia/Kolkata' },
+    { name: 'Himachal Pradesh',  tz: 'Asia/Kolkata' },
+    { name: 'Jammu & Kashmir',   tz: 'Asia/Kolkata' },
+    { name: 'Jharkhand',         tz: 'Asia/Kolkata' },
+    { name: 'Karnataka',         tz: 'Asia/Kolkata' },
+    { name: 'Kerala',            tz: 'Asia/Kolkata' },
+    { name: 'Madhya Pradesh',    tz: 'Asia/Kolkata' },
+    { name: 'Maharashtra',       tz: 'Asia/Kolkata' },
+    { name: 'Manipur',           tz: 'Asia/Kolkata' },
+    { name: 'Meghalaya',         tz: 'Asia/Kolkata' },
+    { name: 'Mizoram',           tz: 'Asia/Kolkata' },
+    { name: 'Nagaland',          tz: 'Asia/Kolkata' },
+    { name: 'Odisha',            tz: 'Asia/Kolkata' },
+    { name: 'Punjab',            tz: 'Asia/Kolkata' },
+    { name: 'Rajasthan',         tz: 'Asia/Kolkata' },
+    { name: 'Sikkim',            tz: 'Asia/Kolkata' },
+    { name: 'Tamil Nadu',        tz: 'Asia/Kolkata' },
+    { name: 'Telangana',         tz: 'Asia/Kolkata' },
+    { name: 'Tripura',           tz: 'Asia/Kolkata' },
+    { name: 'Uttar Pradesh',     tz: 'Asia/Kolkata' },
+    { name: 'Uttarakhand',       tz: 'Asia/Kolkata' },
+    { name: 'West Bengal',       tz: 'Asia/Kolkata' },
+  ]},
+  ID: { name: 'Indonesia', states: [
+    { name: 'Aceh',              tz: 'Asia/Jakarta' },
+    { name: 'Bali',              tz: 'Asia/Makassar' },
+    { name: 'Banten',            tz: 'Asia/Jakarta' },
+    { name: 'Central Java',      tz: 'Asia/Jakarta' },
+    { name: 'East Java',         tz: 'Asia/Jakarta' },
+    { name: 'East Kalimantan',   tz: 'Asia/Makassar' },
+    { name: 'Jakarta',           tz: 'Asia/Jakarta' },
+    { name: 'North Sulawesi',    tz: 'Asia/Makassar' },
+    { name: 'North Sumatra',     tz: 'Asia/Jakarta' },
+    { name: 'Papua',             tz: 'Asia/Jayapura' },
+    { name: 'South Kalimantan',  tz: 'Asia/Makassar' },
+    { name: 'South Sulawesi',    tz: 'Asia/Makassar' },
+    { name: 'West Java',         tz: 'Asia/Jakarta' },
+    { name: 'West Kalimantan',   tz: 'Asia/Pontianak' },
+    { name: 'West Sumatra',      tz: 'Asia/Jakarta' },
+    { name: 'Yogyakarta',        tz: 'Asia/Jakarta' },
+    { name: 'Other',             tz: 'Asia/Jakarta' },
+  ]},
+  IR: { name: 'Iran', states: [
+    { name: 'Tehran',           tz: 'Asia/Tehran' },
+    { name: 'Isfahan',          tz: 'Asia/Tehran' },
+    { name: 'Fars (Shiraz)',     tz: 'Asia/Tehran' },
+    { name: 'Khorasan',         tz: 'Asia/Tehran' },
+    { name: 'East Azerbaijan',  tz: 'Asia/Tehran' },
+    { name: 'Khuzestan',        tz: 'Asia/Tehran' },
+    { name: 'Other',            tz: 'Asia/Tehran' },
+  ]},
+  IT: { name: 'Italy', states: [
+    { name: 'Campania',   tz: 'Europe/Rome' },
+    { name: 'Lazio',      tz: 'Europe/Rome' },
+    { name: 'Lombardy',   tz: 'Europe/Rome' },
+    { name: 'Piedmont',   tz: 'Europe/Rome' },
+    { name: 'Sicily',     tz: 'Europe/Rome' },
+    { name: 'Tuscany',    tz: 'Europe/Rome' },
+    { name: 'Veneto',     tz: 'Europe/Rome' },
+    { name: 'Other',      tz: 'Europe/Rome' },
+  ]},
+  JP: { name: 'Japan', states: [
+    { name: 'Aichi (Nagoya)',     tz: 'Asia/Tokyo' },
+    { name: 'Fukuoka',            tz: 'Asia/Tokyo' },
+    { name: 'Hokkaido (Sapporo)', tz: 'Asia/Tokyo' },
+    { name: 'Kyoto',              tz: 'Asia/Tokyo' },
+    { name: 'Osaka',              tz: 'Asia/Tokyo' },
+    { name: 'Okinawa',            tz: 'Asia/Tokyo' },
+    { name: 'Tokyo',              tz: 'Asia/Tokyo' },
+    { name: 'Other',              tz: 'Asia/Tokyo' },
+  ]},
+  KE: { name: 'Kenya', states: [
+    { name: 'Nairobi',  tz: 'Africa/Nairobi' },
+    { name: 'Mombasa',  tz: 'Africa/Nairobi' },
+    { name: 'Nakuru',   tz: 'Africa/Nairobi' },
+    { name: 'Kisumu',   tz: 'Africa/Nairobi' },
+    { name: 'Other',    tz: 'Africa/Nairobi' },
+  ]},
+  MX: { name: 'Mexico', states: [
+    { name: 'Baja California',   tz: 'America/Tijuana' },
+    { name: 'Chihuahua',         tz: 'America/Chihuahua' },
+    { name: 'Coahuila',          tz: 'America/Monterrey' },
+    { name: 'Jalisco',           tz: 'America/Mexico_City' },
+    { name: 'Mexico City',       tz: 'America/Mexico_City' },
+    { name: 'Nuevo León',        tz: 'America/Monterrey' },
+    { name: 'Oaxaca',            tz: 'America/Mexico_City' },
+    { name: 'Quintana Roo',      tz: 'America/Cancun' },
+    { name: 'Sinaloa',           tz: 'America/Mazatlan' },
+    { name: 'Sonora',            tz: 'America/Hermosillo' },
+    { name: 'Veracruz',          tz: 'America/Mexico_City' },
+    { name: 'Yucatán',           tz: 'America/Merida' },
+    { name: 'Other',             tz: 'America/Mexico_City' },
+  ]},
+  NL: { name: 'Netherlands', states: [
+    { name: 'North Holland (Amsterdam)', tz: 'Europe/Amsterdam' },
+    { name: 'South Holland',             tz: 'Europe/Amsterdam' },
+    { name: 'Utrecht',                   tz: 'Europe/Amsterdam' },
+    { name: 'Other',                     tz: 'Europe/Amsterdam' },
+  ]},
+  NZ: { name: 'New Zealand', states: [
+    { name: 'Auckland',        tz: 'Pacific/Auckland' },
+    { name: 'Canterbury',      tz: 'Pacific/Auckland' },
+    { name: 'Wellington',      tz: 'Pacific/Auckland' },
+    { name: 'Waikato',         tz: 'Pacific/Auckland' },
+    { name: 'Chatham Islands', tz: 'Pacific/Chatham' },
+    { name: 'Other',           tz: 'Pacific/Auckland' },
+  ]},
+  NG: { name: 'Nigeria', states: [
+    { name: 'Lagos',        tz: 'Africa/Lagos' },
+    { name: 'Kano',         tz: 'Africa/Lagos' },
+    { name: 'FCT (Abuja)',  tz: 'Africa/Lagos' },
+    { name: 'Rivers',       tz: 'Africa/Lagos' },
+    { name: 'Oyo (Ibadan)', tz: 'Africa/Lagos' },
+    { name: 'Anambra',      tz: 'Africa/Lagos' },
+    { name: 'Other',        tz: 'Africa/Lagos' },
+  ]},
+  PK: { name: 'Pakistan', states: [
+    { name: 'Punjab',                      tz: 'Asia/Karachi' },
+    { name: 'Sindh',                       tz: 'Asia/Karachi' },
+    { name: 'Khyber Pakhtunkhwa',          tz: 'Asia/Karachi' },
+    { name: 'Balochistan',                 tz: 'Asia/Karachi' },
+    { name: 'Islamabad Capital Territory', tz: 'Asia/Karachi' },
+    { name: 'Azad Kashmir',                tz: 'Asia/Karachi' },
+    { name: 'Gilgit-Baltistan',            tz: 'Asia/Karachi' },
+  ]},
+  PH: { name: 'Philippines', states: [
+    { name: 'Metro Manila (NCR)',    tz: 'Asia/Manila' },
+    { name: 'Central Luzon',         tz: 'Asia/Manila' },
+    { name: 'CALABARZON',            tz: 'Asia/Manila' },
+    { name: 'Central Visayas',       tz: 'Asia/Manila' },
+    { name: 'Western Visayas',       tz: 'Asia/Manila' },
+    { name: 'Davao Region',          tz: 'Asia/Manila' },
+    { name: 'Other',                 tz: 'Asia/Manila' },
+  ]},
+  RU: { name: 'Russia', states: [
+    { name: 'Moscow / Central',        tz: 'Europe/Moscow' },
+    { name: 'Saint Petersburg',        tz: 'Europe/Moscow' },
+    { name: 'Kaliningrad',             tz: 'Europe/Kaliningrad' },
+    { name: 'Samara / Volga',          tz: 'Europe/Samara' },
+    { name: 'Yekaterinburg / Urals',   tz: 'Asia/Yekaterinburg' },
+    { name: 'Omsk',                    tz: 'Asia/Omsk' },
+    { name: 'Novosibirsk',             tz: 'Asia/Krasnoyarsk' },
+    { name: 'Irkutsk',                 tz: 'Asia/Irkutsk' },
+    { name: 'Vladivostok / Far East',  tz: 'Asia/Vladivostok' },
+    { name: 'Kamchatka',               tz: 'Asia/Kamchatka' },
+  ]},
+  SA: { name: 'Saudi Arabia', states: [
+    { name: 'Riyadh',           tz: 'Asia/Riyadh' },
+    { name: 'Mecca',            tz: 'Asia/Riyadh' },
+    { name: 'Medina',           tz: 'Asia/Riyadh' },
+    { name: 'Eastern Province', tz: 'Asia/Riyadh' },
+    { name: 'Jizan',            tz: 'Asia/Riyadh' },
+    { name: 'Other',            tz: 'Asia/Riyadh' },
+  ]},
+  ZA: { name: 'South Africa', states: [
+    { name: 'Gauteng (Johannesburg)', tz: 'Africa/Johannesburg' },
+    { name: 'Western Cape (Cape Town)',tz: 'Africa/Johannesburg' },
+    { name: 'KwaZulu-Natal (Durban)', tz: 'Africa/Johannesburg' },
+    { name: 'Eastern Cape',           tz: 'Africa/Johannesburg' },
+    { name: 'Limpopo',                tz: 'Africa/Johannesburg' },
+    { name: 'Mpumalanga',             tz: 'Africa/Johannesburg' },
+    { name: 'Other',                  tz: 'Africa/Johannesburg' },
+  ]},
+  KR: { name: 'South Korea', states: [
+    { name: 'Seoul',    tz: 'Asia/Seoul' },
+    { name: 'Busan',    tz: 'Asia/Seoul' },
+    { name: 'Incheon',  tz: 'Asia/Seoul' },
+    { name: 'Daegu',    tz: 'Asia/Seoul' },
+    { name: 'Gwangju',  tz: 'Asia/Seoul' },
+    { name: 'Other',    tz: 'Asia/Seoul' },
+  ]},
+  ES: { name: 'Spain', states: [
+    { name: 'Andalusia',        tz: 'Europe/Madrid' },
+    { name: 'Catalonia',        tz: 'Europe/Madrid' },
+    { name: 'Community of Madrid', tz: 'Europe/Madrid' },
+    { name: 'Valencia',         tz: 'Europe/Madrid' },
+    { name: 'Basque Country',   tz: 'Europe/Madrid' },
+    { name: 'Canary Islands',   tz: 'Atlantic/Canary' },
+    { name: 'Other',            tz: 'Europe/Madrid' },
+  ]},
+  TH: { name: 'Thailand', states: [
+    { name: 'Bangkok',           tz: 'Asia/Bangkok' },
+    { name: 'Chiang Mai',        tz: 'Asia/Bangkok' },
+    { name: 'Phuket',            tz: 'Asia/Bangkok' },
+    { name: 'Chonburi (Pattaya)',tz: 'Asia/Bangkok' },
+    { name: 'Other',             tz: 'Asia/Bangkok' },
+  ]},
+  TR: { name: 'Turkey', states: [
+    { name: 'Istanbul',         tz: 'Europe/Istanbul' },
+    { name: 'Ankara',           tz: 'Europe/Istanbul' },
+    { name: 'Izmir',            tz: 'Europe/Istanbul' },
+    { name: 'Antalya',          tz: 'Europe/Istanbul' },
+    { name: 'Bursa',            tz: 'Europe/Istanbul' },
+    { name: 'Other',            tz: 'Europe/Istanbul' },
+  ]},
+  AE: { name: 'United Arab Emirates', states: [
+    { name: 'Abu Dhabi',     tz: 'Asia/Dubai' },
+    { name: 'Dubai',         tz: 'Asia/Dubai' },
+    { name: 'Sharjah',       tz: 'Asia/Dubai' },
+    { name: 'Ajman',         tz: 'Asia/Dubai' },
+    { name: 'Ras Al Khaimah',tz: 'Asia/Dubai' },
+    { name: 'Fujairah',      tz: 'Asia/Dubai' },
+  ]},
+  GB: { name: 'United Kingdom', states: [
+    { name: 'England — London & South East', tz: 'Europe/London' },
+    { name: 'England — Midlands',            tz: 'Europe/London' },
+    { name: 'England — North',               tz: 'Europe/London' },
+    { name: 'England — South West',          tz: 'Europe/London' },
+    { name: 'Scotland',                      tz: 'Europe/London' },
+    { name: 'Wales',                         tz: 'Europe/London' },
+    { name: 'Northern Ireland',              tz: 'Europe/London' },
+  ]},
+  US: { name: 'United States', states: [
+    { name: 'Alabama',         tz: 'America/Chicago' },
+    { name: 'Alaska',          tz: 'America/Anchorage' },
+    { name: 'Arizona',         tz: 'America/Phoenix' },
+    { name: 'Arkansas',        tz: 'America/Chicago' },
+    { name: 'California',      tz: 'America/Los_Angeles' },
+    { name: 'Colorado',        tz: 'America/Denver' },
+    { name: 'Connecticut',     tz: 'America/New_York' },
+    { name: 'Delaware',        tz: 'America/New_York' },
+    { name: 'Florida',         tz: 'America/New_York' },
+    { name: 'Georgia',         tz: 'America/New_York' },
+    { name: 'Hawaii',          tz: 'Pacific/Honolulu' },
+    { name: 'Idaho',           tz: 'America/Boise' },
+    { name: 'Illinois',        tz: 'America/Chicago' },
+    { name: 'Indiana',         tz: 'America/Indiana/Indianapolis' },
+    { name: 'Iowa',            tz: 'America/Chicago' },
+    { name: 'Kansas',          tz: 'America/Chicago' },
+    { name: 'Kentucky',        tz: 'America/New_York' },
+    { name: 'Louisiana',       tz: 'America/Chicago' },
+    { name: 'Maine',           tz: 'America/New_York' },
+    { name: 'Maryland',        tz: 'America/New_York' },
+    { name: 'Massachusetts',   tz: 'America/New_York' },
+    { name: 'Michigan',        tz: 'America/Detroit' },
+    { name: 'Minnesota',       tz: 'America/Chicago' },
+    { name: 'Mississippi',     tz: 'America/Chicago' },
+    { name: 'Missouri',        tz: 'America/Chicago' },
+    { name: 'Montana',         tz: 'America/Denver' },
+    { name: 'Nebraska',        tz: 'America/Chicago' },
+    { name: 'Nevada',          tz: 'America/Los_Angeles' },
+    { name: 'New Hampshire',   tz: 'America/New_York' },
+    { name: 'New Jersey',      tz: 'America/New_York' },
+    { name: 'New Mexico',      tz: 'America/Denver' },
+    { name: 'New York',        tz: 'America/New_York' },
+    { name: 'North Carolina',  tz: 'America/New_York' },
+    { name: 'North Dakota',    tz: 'America/Chicago' },
+    { name: 'Ohio',            tz: 'America/New_York' },
+    { name: 'Oklahoma',        tz: 'America/Chicago' },
+    { name: 'Oregon',          tz: 'America/Los_Angeles' },
+    { name: 'Pennsylvania',    tz: 'America/New_York' },
+    { name: 'Rhode Island',    tz: 'America/New_York' },
+    { name: 'South Carolina',  tz: 'America/New_York' },
+    { name: 'South Dakota',    tz: 'America/Chicago' },
+    { name: 'Tennessee',       tz: 'America/Chicago' },
+    { name: 'Texas',           tz: 'America/Chicago' },
+    { name: 'Utah',            tz: 'America/Denver' },
+    { name: 'Vermont',         tz: 'America/New_York' },
+    { name: 'Virginia',        tz: 'America/New_York' },
+    { name: 'Washington',      tz: 'America/Los_Angeles' },
+    { name: 'Washington D.C.', tz: 'America/New_York' },
+    { name: 'West Virginia',   tz: 'America/New_York' },
+    { name: 'Wisconsin',       tz: 'America/Chicago' },
+    { name: 'Wyoming',         tz: 'America/Denver' },
+  ]},
+  VN: { name: 'Vietnam', states: [
+    { name: 'Hanoi',          tz: 'Asia/Ho_Chi_Minh' },
+    { name: 'Ho Chi Minh City',tz: 'Asia/Ho_Chi_Minh' },
+    { name: 'Da Nang',        tz: 'Asia/Ho_Chi_Minh' },
+    { name: 'Hai Phong',      tz: 'Asia/Ho_Chi_Minh' },
+    { name: 'Other',          tz: 'Asia/Ho_Chi_Minh' },
+  ]},
+};
+
+const COUNTRY_LIST = Object.entries(GEO_DATA)
+  .map(([code, d]) => ({ code, name: d.name }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+// ── CALCULATION (unchanged) ───────────────────────────────────────────────────
 
 const LAHIRI_AYANAMSA_2000 = 23.85;
 const AYANAMSA_RATE = 50.3 / 3600;
@@ -82,106 +530,18 @@ function getNakshatraFromLon(siderealLon) {
   return { nakshatra: NAKSHATRAS[idx], pada, longitude: siderealLon };
 }
 
-async function geocodeCity(city) {
-  const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`, {
-    headers: { 'User-Agent': 'NakshatraApp/1.0' }
-  });
-  const data = await res.json();
-  if (!data.length) throw new Error("City not found. Please try a different name.");
-  return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
-}
-
-async function getTimezone(lat, lon) {
-  const res = await fetch(`https://timeapi.io/api/timezone/coordinate?latitude=${lat}&longitude=${lon}`);
-  const data = await res.json();
-  return data.timeZone;
-}
-
 async function generateNames(nakshatra, gender) {
   const res = await fetch("/api/generate-names", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ nakshatra, gender })
   });
-
   if (!res.ok) {
     const error = await res.json();
     throw new Error(error.message || 'Failed to generate names');
   }
-
   const data = await res.json();
   return data.names;
-}
-
-// ── CITY AUTOCOMPLETE INPUT ───────────────────────────────────────────────────
-
-function CityInput({ value, onChange }) {
-  const [query, setQuery] = useState(value);
-  const [suggestions, setSuggestions] = useState([]);
-  const [open, setOpen] = useState(false);
-  const timerRef = useRef(null);
-  const wrapperRef = useRef(null);
-
-  useEffect(() => {
-    function handleOutsideClick(e) {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
-        setOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleOutsideClick);
-    return () => document.removeEventListener('mousedown', handleOutsideClick);
-  }, []);
-
-  const handleChange = (e) => {
-    const val = e.target.value;
-    setQuery(val);
-    onChange(val);
-    clearTimeout(timerRef.current);
-    if (val.length < 3) {
-      setSuggestions([]);
-      setOpen(false);
-      return;
-    }
-    timerRef.current = setTimeout(async () => {
-      try {
-        const res = await fetch(
-          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val)}&format=json&limit=5`,
-          { headers: { 'User-Agent': 'NakshatraApp/1.0' } }
-        );
-        const data = await res.json();
-        setSuggestions(data);
-        setOpen(data.length > 0);
-      } catch {}
-    }, 350);
-  };
-
-  const select = (item) => {
-    setQuery(item.display_name);
-    onChange(item.display_name);
-    setSuggestions([]);
-    setOpen(false);
-  };
-
-  return (
-    <div className="city-wrap" ref={wrapperRef}>
-      <input
-        type="text"
-        placeholder="e.g. Mumbai, India"
-        value={query}
-        onChange={handleChange}
-        autoComplete="off"
-      />
-      {open && (
-        <div className="city-dropdown">
-          {suggestions.map((s, i) => (
-            <div key={i} className="city-option" onMouseDown={() => select(s)}>
-              {s.display_name}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
 }
 
 // ── SCIENCE TAB ──────────────────────────────────────────────────────────────
@@ -337,12 +697,8 @@ function AskTab() {
             {submitting ? 'Sending...' : 'Send question'}
           </button>
         </form>
-        {status === 'success' && (
-          <div className="contact-success">Your question has been received. We'll be in touch.</div>
-        )}
-        {status === 'error' && (
-          <div className="error">Something went wrong. Please try again.</div>
-        )}
+        {status === 'success' && <div className="contact-success">Your question has been received. We'll be in touch.</div>}
+        {status === 'error' && <div className="error">Something went wrong. Please try again.</div>}
       </div>
     </div>
   );
@@ -350,24 +706,18 @@ function AskTab() {
 
 // ── MAIN APP ─────────────────────────────────────────────────────────────────
 
-const MONTHS = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
-];
-
-const MINUTES = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'];
+const BLANK_FORM = {
+  dateMonth: '', dateDay: '', dateYear: '',
+  timePeriod: '',
+  timeHour: '', timeMinute: '00', timeAmPm: 'AM',
+  country: '', state: '',
+  gender: '',
+};
 
 export default function App() {
   const [tab, setTab] = useState('generator');
-
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
-
-  const [form, setForm] = useState({
-    dateMonth: '', dateDay: '', dateYear: '',
-    timeHour: '', timeMinute: '00', timeAmPm: 'AM',
-    city: '', gender: 'male'
-  });
+  const [step, setStep] = useState(1);
+  const [form, setForm] = useState(BLANK_FORM);
   const [loading, setLoading] = useState(false);
   const [loadingNames, setLoadingNames] = useState(false);
   const [error, setError] = useState('');
@@ -376,43 +726,52 @@ export default function App() {
 
   const update = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
-  const buildDateTime = () => {
-    const { dateMonth, dateDay, dateYear, timeHour, timeMinute, timeAmPm } = form;
-    const MM = String(dateMonth).padStart(2, '0');
-    const DD = String(dateDay).padStart(2, '0');
-    const dateStr = `${dateYear}-${MM}-${DD}`;
-    let hour = parseInt(timeHour, 10);
-    if (timeAmPm === 'AM') {
-      if (hour === 12) hour = 0;
+  const startOver = () => {
+    setStep(1);
+    setForm(BLANK_FORM);
+    setResult(null);
+    setNames([]);
+    setError('');
+  };
+
+  const buildDateTime = (f) => {
+    const MM = String(f.dateMonth).padStart(2, '0');
+    const DD = String(f.dateDay).padStart(2, '0');
+    const dateStr = `${f.dateYear}-${MM}-${DD}`;
+
+    let timeStr;
+    if (f.timePeriod === 'unknown') {
+      timeStr = '12:00';
+    } else if (f.timeHour) {
+      let hour = parseInt(f.timeHour, 10);
+      if (f.timeAmPm === 'AM') { if (hour === 12) hour = 0; }
+      else { if (hour !== 12) hour += 12; }
+      timeStr = `${String(hour).padStart(2, '0')}:${f.timeMinute}`;
     } else {
-      if (hour !== 12) hour += 12;
+      timeStr = TIME_PERIODS.find(p => p.id === f.timePeriod)?.midpoint || '12:00';
     }
-    const HH = String(hour).padStart(2, '0');
-    const timeStr = `${HH}:${timeMinute}`;
     return { dateStr, timeStr };
   };
 
-  const calculate = async () => {
-    const { dateMonth, dateDay, dateYear, timeHour, city } = form;
-    if (!dateMonth || !dateDay || !dateYear || !timeHour || !city) {
-      setError('Please fill in all fields.');
-      return;
-    }
+  const calculate = async (gender) => {
     setError('');
     setLoading(true);
     setResult(null);
     setNames([]);
     try {
-      const geo = await geocodeCity(city);
-      const tz = await getTimezone(geo.lat, geo.lon);
-      const { dateStr, timeStr } = buildDateTime();
+      const stateIdx = parseInt(form.state, 10);
+      const stateData = GEO_DATA[form.country].states[stateIdx];
+      const tz = stateData.tz;
+
+      const { dateStr, timeStr } = buildDateTime(form);
       const { sidereal, ayanamsa } = getMoonLongitude(new Date(`${dateStr}T${timeStr}:00`));
       const { nakshatra, pada, longitude } = getNakshatraFromLon(sidereal);
+
       setResult({ nakshatra, pada, longitude, ayanamsa, tz });
       setLoading(false);
       setLoadingNames(true);
       try {
-        const nameList = await generateNames(nakshatra, form.gender);
+        const nameList = await generateNames(nakshatra, gender);
         setNames(nameList);
       } catch {
         setError('Name suggestions are unavailable right now. Please try again later.');
@@ -437,20 +796,201 @@ export default function App() {
     setLoadingNames(false);
   };
 
+  // ── Step renderers ──────────────────────────────────────────────────────────
+
+  const canStep1 = form.dateMonth && form.dateDay && form.dateYear;
+  const canStep2 = !!form.timePeriod;
+  const canStep3 = form.country && form.state !== '';
+
+  const states = form.country ? GEO_DATA[form.country]?.states || [] : [];
+
+  const renderStep = () => {
+    // Step 1: Date
+    if (step === 1) return (
+      <>
+        <p className="step-question">When were you born?</p>
+        <div className="multi-select-row" style={{ marginBottom: '1.5rem' }}>
+          <select value={form.dateMonth} onChange={e => update('dateMonth', e.target.value)}>
+            <option value="">Month</option>
+            {MONTHS.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
+          </select>
+          <select value={form.dateDay} onChange={e => update('dateDay', e.target.value)}>
+            <option value="">Day</option>
+            {Array.from({ length: 31 }, (_, i) => i + 1).map(d => <option key={d} value={d}>{d}</option>)}
+          </select>
+          <select value={form.dateYear} onChange={e => update('dateYear', e.target.value)}>
+            <option value="">Year</option>
+            {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+          </select>
+        </div>
+        <button className="btn" onClick={() => setStep(2)} disabled={!canStep1}>Continue</button>
+      </>
+    );
+
+    // Step 2: Time
+    if (step === 2) return (
+      <>
+        <p className="step-question">What time were you born?</p>
+        <div className="time-pills">
+          {TIME_PERIODS.map(p => (
+            <button
+              key={p.id}
+              className={`time-pill${form.timePeriod === p.id ? ' selected' : ''}`}
+              onClick={() => update('timePeriod', p.id)}
+            >
+              {p.label}
+              {p.sub && <span className="pill-sub">{p.sub}</span>}
+            </button>
+          ))}
+        </div>
+
+        {form.timePeriod === 'unknown' && (
+          <div className="step-note">
+            We'll use noon as default. Results may be slightly less accurate.
+          </div>
+        )}
+
+        {form.timePeriod && form.timePeriod !== 'unknown' && (
+          <div className="optional-section">
+            <div className="optional-label">Exact time (optional)</div>
+            <div className="multi-select-row time-cols">
+              <select value={form.timeHour} onChange={e => update('timeHour', e.target.value)}>
+                <option value="">Hour</option>
+                {Array.from({ length: 12 }, (_, i) => i + 1).map(h => <option key={h} value={h}>{h}</option>)}
+              </select>
+              <select value={form.timeMinute} onChange={e => update('timeMinute', e.target.value)}>
+                {MINUTES.map(m => <option key={m} value={m}>{m}</option>)}
+              </select>
+              <select value={form.timeAmPm} onChange={e => update('timeAmPm', e.target.value)}>
+                <option value="AM">AM</option>
+                <option value="PM">PM</option>
+              </select>
+            </div>
+          </div>
+        )}
+
+        <button className="back-btn" onClick={() => setStep(1)}>← Back</button>
+        <button className="btn" onClick={() => setStep(3)} disabled={!canStep2}>Continue</button>
+      </>
+    );
+
+    // Step 3: Location
+    if (step === 3) return (
+      <>
+        <p className="step-question">Where were you born?</p>
+        <div className="form-stack" style={{ marginBottom: '1.5rem' }}>
+          <div className="form-group">
+            <label>Country</label>
+            <select value={form.country} onChange={e => { update('country', e.target.value); update('state', ''); }}>
+              <option value="">Select country</option>
+              {COUNTRY_LIST.map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
+            </select>
+          </div>
+          {form.country && (
+            <div className="form-group">
+              <label>State / Province</label>
+              <select value={form.state} onChange={e => update('state', e.target.value)}>
+                <option value="">Select state / province</option>
+                {states.map((s, i) => <option key={i} value={i}>{s.name}</option>)}
+              </select>
+            </div>
+          )}
+        </div>
+        <button className="back-btn" onClick={() => setStep(2)}>← Back</button>
+        <button className="btn" onClick={() => setStep(4)} disabled={!canStep3}>Continue</button>
+      </>
+    );
+
+    // Step 4: Gender
+    if (step === 4) return (
+      <>
+        <p className="step-question">What names are you looking for?</p>
+        {loading ? (
+          <div className="loading" style={{ padding: '2rem 0' }}>Calculating your nakshatra...</div>
+        ) : (
+          <div className="gender-pills">
+            <button className="gender-pill" onClick={() => { update('gender', 'male'); calculate('male'); }}>
+              Male
+            </button>
+            <button className="gender-pill" onClick={() => { update('gender', 'female'); calculate('female'); }}>
+              Female
+            </button>
+          </div>
+        )}
+        {!loading && <button className="back-btn" style={{ marginTop: '1.25rem' }} onClick={() => setStep(3)}>← Back</button>}
+        {error && <div className="error" style={{ marginTop: '1rem' }}>{error}</div>}
+      </>
+    );
+  };
+
+  // ── Result view ─────────────────────────────────────────────────────────────
+
+  const renderResult = () => (
+    <>
+      <div className="card">
+        <div className="nak-header">
+          <div>
+            <div className="nak-name">{result.nakshatra.name}</div>
+            <div className="nak-sub">{result.nakshatra.deity} · {result.nakshatra.planet} · Pada {result.pada}</div>
+          </div>
+          <span className="pada-badge">Pada {result.pada}</span>
+        </div>
+        <div className="meta-grid">
+          <div className="meta-item">
+            <div className="meta-label">Ruling planet</div>
+            <div className="meta-value">{result.nakshatra.planet}</div>
+          </div>
+          <div className="meta-item">
+            <div className="meta-label">Presiding deity</div>
+            <div className="meta-value">{result.nakshatra.deity}</div>
+          </div>
+          <div className="meta-item full">
+            <div className="meta-label">Quality</div>
+            <div className="meta-value">{result.nakshatra.quality}</div>
+          </div>
+        </div>
+        <div className="syllables-section">
+          <div className="section-label">Sacred starting syllables</div>
+          <div className="syllables-row">
+            {result.nakshatra.syllables.map(s => <span key={s} className="chip">{s}</span>)}
+          </div>
+        </div>
+        <div className="moon-pos">
+          Moon at {result.longitude.toFixed(2)}° sidereal · Lahiri ayanamsha {result.ayanamsa.toFixed(2)}° · {result.tz}
+        </div>
+      </div>
+
+      {(loadingNames || names.length > 0) && (
+        <div className="card">
+          <div className="names-title">Name suggestions for {result.nakshatra.name}</div>
+          {loadingNames && <div className="loading">Generating names...</div>}
+          {names.map((n, i) => (
+            <div key={i} className="name-item">
+              <div className="name-text">{n.name}</div>
+              <div className="name-meaning">{n.meaning}</div>
+            </div>
+          ))}
+          {names.length > 0 && (
+            <button className="regen-btn" onClick={regenerate}>Suggest different names</button>
+          )}
+        </div>
+      )}
+
+      {error && <div className="error" style={{ marginBottom: '1rem' }}>{error}</div>}
+      <button className="start-over-btn" onClick={startOver}>← Start over</button>
+    </>
+  );
+
+  // ── Layout ──────────────────────────────────────────────────────────────────
+
   return (
     <div className="app">
       <nav className="nav">
         <span className="nav-logo">Nakshatra</span>
         <div className="tab-pills">
-          <button className={`tab-pill${tab === 'generator' ? ' active' : ''}`} onClick={() => setTab('generator')}>
-            Generator
-          </button>
-          <button className={`tab-pill${tab === 'science' ? ' active' : ''}`} onClick={() => setTab('science')}>
-            The science
-          </button>
-          <button className={`tab-pill${tab === 'ask' ? ' active' : ''}`} onClick={() => setTab('ask')}>
-            Ask a question
-          </button>
+          <button className={`tab-pill${tab === 'generator' ? ' active' : ''}`} onClick={() => setTab('generator')}>Generator</button>
+          <button className={`tab-pill${tab === 'science' ? ' active' : ''}`} onClick={() => setTab('science')}>The science</button>
+          <button className={`tab-pill${tab === 'ask' ? ' active' : ''}`} onClick={() => setTab('ask')}>Ask a question</button>
         </div>
       </nav>
 
@@ -462,125 +1002,17 @@ export default function App() {
           <h1 className="page-title">Find your birth star.</h1>
           <p className="page-subtitle">Discover the nakshatra at your moment of birth and the sacred syllables for naming.</p>
 
-          <div className="card">
-            <div className="form-grid">
-
-              <div className="form-group full">
-                <label>Date of birth</label>
-                <div className="multi-select-row">
-                  <select value={form.dateMonth} onChange={e => update('dateMonth', e.target.value)}>
-                    <option value="">Month</option>
-                    {MONTHS.map((m, i) => (
-                      <option key={m} value={i + 1}>{m}</option>
-                    ))}
-                  </select>
-                  <select value={form.dateDay} onChange={e => update('dateDay', e.target.value)}>
-                    <option value="">Day</option>
-                    {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
-                      <option key={d} value={d}>{d}</option>
-                    ))}
-                  </select>
-                  <select value={form.dateYear} onChange={e => update('dateYear', e.target.value)}>
-                    <option value="">Year</option>
-                    {years.map(y => (
-                      <option key={y} value={y}>{y}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="form-group full">
-                <label>Time of birth</label>
-                <div className="multi-select-row">
-                  <select value={form.timeHour} onChange={e => update('timeHour', e.target.value)}>
-                    <option value="">Hour</option>
-                    {Array.from({ length: 12 }, (_, i) => i + 1).map(h => (
-                      <option key={h} value={h}>{h}</option>
-                    ))}
-                  </select>
-                  <select value={form.timeMinute} onChange={e => update('timeMinute', e.target.value)}>
-                    {MINUTES.map(m => (
-                      <option key={m} value={m}>{m}</option>
-                    ))}
-                  </select>
-                  <select value={form.timeAmPm} onChange={e => update('timeAmPm', e.target.value)}>
-                    <option value="AM">AM</option>
-                    <option value="PM">PM</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="form-group full">
-                <label>City of birth</label>
-                <CityInput value={form.city} onChange={v => update('city', v)} />
-              </div>
-
-              <div className="form-group full">
-                <label>Gender (for name suggestions)</label>
-                <select value={form.gender} onChange={e => update('gender', e.target.value)}>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
-              </div>
-
-            </div>
-            <button className="btn" onClick={calculate} disabled={loading}>
-              {loading ? 'Calculating...' : 'Find nakshatra & names'}
-            </button>
-            {error && <div className="error">{error}</div>}
-          </div>
-
-          {result && (
+          {!result ? (
             <div className="card">
-              <div className="nak-header">
-                <div>
-                  <div className="nak-name">{result.nakshatra.name}</div>
-                  <div className="nak-sub">{result.nakshatra.deity} · {result.nakshatra.planet} · Pada {result.pada}</div>
-                </div>
-                <span className="pada-badge">Pada {result.pada}</span>
+              <div className="progress-bar">
+                {[1, 2, 3, 4].map(s => (
+                  <div key={s} className={`progress-seg${step >= s ? ' done' : ''}`} />
+                ))}
               </div>
-              <div className="meta-grid">
-                <div className="meta-item">
-                  <div className="meta-label">Ruling planet</div>
-                  <div className="meta-value">{result.nakshatra.planet}</div>
-                </div>
-                <div className="meta-item">
-                  <div className="meta-label">Presiding deity</div>
-                  <div className="meta-value">{result.nakshatra.deity}</div>
-                </div>
-                <div className="meta-item full">
-                  <div className="meta-label">Quality</div>
-                  <div className="meta-value">{result.nakshatra.quality}</div>
-                </div>
-              </div>
-              <div className="syllables-section">
-                <div className="section-label">Sacred starting syllables</div>
-                <div className="syllables-row">
-                  {result.nakshatra.syllables.map(s => (
-                    <span key={s} className="chip">{s}</span>
-                  ))}
-                </div>
-              </div>
-              <div className="moon-pos">
-                Moon at {result.longitude.toFixed(2)}° sidereal · Lahiri ayanamsha {result.ayanamsa.toFixed(2)}° · {result.tz}
-              </div>
+              {renderStep()}
             </div>
-          )}
-
-          {(loadingNames || names.length > 0) && (
-            <div className="card">
-              <div className="names-title">Name suggestions for {result?.nakshatra.name}</div>
-              {loadingNames && <div className="loading">Generating names...</div>}
-              {names.map((n, i) => (
-                <div key={i} className="name-item">
-                  <div className="name-text">{n.name}</div>
-                  <div className="name-meaning">{n.meaning}</div>
-                </div>
-              ))}
-              {names.length > 0 && (
-                <button className="regen-btn" onClick={regenerate}>Suggest different names</button>
-              )}
-            </div>
+          ) : (
+            renderResult()
           )}
         </div>
       )}

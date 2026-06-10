@@ -502,6 +502,162 @@ textarea { resize: vertical; min-height: 130px; }
   line-height: 1.5;
 }
 
+/* ── STEP FLOW ── */
+.progress-bar {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 2rem;
+}
+
+.progress-seg {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: #2A2A2A;
+  transition: background 0.3s;
+}
+
+.progress-seg.done { background: #7F6FDB; }
+
+.step-question {
+  font-size: 20px;
+  font-weight: 600;
+  color: #F5F0FF;
+  letter-spacing: -0.3px;
+  line-height: 1.25;
+  margin-bottom: 1.5rem;
+}
+
+.step-note {
+  font-size: 13px;
+  color: #9B8FDB;
+  line-height: 1.55;
+  padding: 10px 14px;
+  background: rgba(127, 111, 219, 0.07);
+  border: 1px solid rgba(127, 111, 219, 0.18);
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+/* ── TIME-OF-DAY PILLS ── */
+.time-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.time-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 18px;
+  background: #141414;
+  border: 1px solid #2A2A2A;
+  border-radius: 100px;
+  color: #9B8FDB;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.time-pill:hover { border-color: #7F6FDB; color: #B8AAFF; }
+
+.time-pill.selected {
+  background: #1E1A33;
+  border-color: #7F6FDB;
+  color: #B8AAFF;
+}
+
+.pill-sub {
+  font-size: 11px;
+  color: #555;
+  font-weight: 400;
+}
+
+.time-pill.selected .pill-sub { color: #7F6FDB; }
+
+/* ── OPTIONAL EXACT TIME ── */
+.optional-section {
+  margin-bottom: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #2A2A2A;
+}
+
+.optional-label {
+  font-size: 11px;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 10px;
+}
+
+/* ── GENDER PILLS (step 4) ── */
+.gender-pills {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 0.5rem;
+}
+
+.gender-pill {
+  padding: 22px 16px;
+  background: #141414;
+  border: 1px solid #2A2A2A;
+  border-radius: 12px;
+  color: #9B8FDB;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.gender-pill:hover {
+  background: #1E1A33;
+  border-color: #7F6FDB;
+  color: #B8AAFF;
+}
+
+.gender-pill:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── BACK / START OVER BUTTONS ── */
+.back-btn {
+  display: inline-block;
+  background: transparent;
+  border: none;
+  color: #555;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 1rem;
+  transition: color 0.15s;
+}
+
+.back-btn:hover { color: #9B8FDB; }
+
+.start-over-btn {
+  background: transparent;
+  border: 1px solid #2A2A2A;
+  color: #555;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  padding: 7px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.start-over-btn:hover { border-color: #7F6FDB; color: #9B8FDB; }
+
 /* ── MOBILE ── */
 @media (max-width: 600px) {
   .nav {
@@ -530,4 +686,12 @@ textarea { resize: vertical; min-height: 130px; }
   .meta-item.full { grid-column: 1; }
 
   .nak-name { font-size: 22px; }
+
+  .time-pills { gap: 8px; }
+  .time-pill { padding: 8px 14px; font-size: 13px; }
+
+  .gender-pills { gap: 10px; }
+  .gender-pill { padding: 18px 12px; font-size: 15px; }
+
+  .step-question { font-size: 18px; }
 }
