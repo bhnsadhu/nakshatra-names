@@ -548,7 +548,7 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
 .form-stack {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 18px;
 }
 
 .contact-success {

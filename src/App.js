@@ -728,10 +728,10 @@ function AskTab() {
               required
             />
           </div>
+          <button type="submit" className="btn" disabled={submitting}>
+            {submitting ? 'Sending...' : 'Send question'}
+          </button>
         </div>
-        <button type="submit" className="btn" disabled={submitting}>
-          {submitting ? 'Sending...' : 'Send question'}
-        </button>
       </form>
       {status === 'success' && <div className="contact-success">Your question has been received. We'll be in touch.</div>}
       {status === 'error' && <div className="error">Something went wrong. Please try again.</div>}
