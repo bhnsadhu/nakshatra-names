@@ -119,6 +119,26 @@ body {
   margin-bottom: 8px;
 }
 
+.generator-hero {
+  margin-bottom: 2rem;
+}
+
+.generator-title {
+  font-size: 36px;
+  font-weight: 600;
+  color: #F5F0FF;
+  letter-spacing: -0.8px;
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+
+.generator-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  color: #555;
+  line-height: 1.5;
+}
+
 .page-subtitle {
   font-size: 13px;
   font-weight: 300;

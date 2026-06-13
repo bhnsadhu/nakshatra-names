@@ -1069,6 +1069,10 @@ export default function App() {
         <div className="page page-wide">
           {!result ? (
             <div className="step-screen">
+              <div className="generator-hero">
+                <h1 className="generator-title">Discover your birth star.</h1>
+                <p className="generator-subtitle">Find your birth star and the sacred syllables for naming.</p>
+              </div>
               <div className="step-top">
                 <div className="progress-dots">
                   {[1, 2, 3, 4].map(s => (
