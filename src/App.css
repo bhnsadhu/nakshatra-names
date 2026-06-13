@@ -156,12 +156,12 @@ textarea { resize: vertical; min-height: 130px; }
   font-weight: 500;
   cursor: pointer;
   margin-top: 1rem;
-  transition: opacity 0.15s;
+  transition: opacity 0.15s, transform 0.15s;
   letter-spacing: -0.1px;
 }
 
-.btn:hover { opacity: 0.88; }
-.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn:hover { opacity: 0.9; transform: scale(1.01); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
 .error {
   background: rgba(200, 50, 50, 0.1);
@@ -262,6 +262,11 @@ textarea { resize: vertical; min-height: 130px; }
   font-weight: 500;
   padding: 6px 18px;
   border-radius: 20px;
+  transition: box-shadow 0.18s;
+}
+
+.chip:hover {
+  box-shadow: 0 0 14px rgba(127, 111, 219, 0.38);
 }
 
 .moon-pos {
@@ -478,7 +483,7 @@ textarea { resize: vertical; min-height: 130px; }
 }
 
 .sci-source-item::before {
-  content: '–';
+  content: '·';
   position: absolute;
   left: 0;
   color: #333;
@@ -542,17 +547,22 @@ textarea { resize: vertical; min-height: 130px; }
 /* ── TIME-OF-DAY PILLS ── */
 .time-pills {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  gap: 8px;
   margin-bottom: 1.5rem;
+  padding-bottom: 2px;
 }
+
+.time-pills::-webkit-scrollbar { display: none; }
 
 .time-pill {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 3px;
-  padding: 10px 18px;
+  justify-content: center;
+  padding: 9px 18px;
   background: #141414;
   border: 1px solid #2A2A2A;
   border-radius: 100px;
@@ -561,26 +571,18 @@ textarea { resize: vertical; min-height: 130px; }
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  transition: border-color 0.15s, background 0.15s, color 0.15s, transform 0.15s;
   white-space: nowrap;
-  line-height: 1.2;
+  flex-shrink: 0;
 }
 
-.time-pill:hover { border-color: #7F6FDB; color: #B8AAFF; }
+.time-pill:hover { border-color: #7F6FDB; color: #B8AAFF; transform: scale(1.03); }
 
 .time-pill.selected {
   background: #1E1A33;
   border-color: #7F6FDB;
   color: #B8AAFF;
 }
-
-.pill-sub {
-  font-size: 11px;
-  color: #555;
-  font-weight: 400;
-}
-
-.time-pill.selected .pill-sub { color: #7F6FDB; }
 
 /* ── OPTIONAL EXACT TIME ── */
 .optional-section {
@@ -616,13 +618,14 @@ textarea { resize: vertical; min-height: 130px; }
   font-weight: 500;
   cursor: pointer;
   text-align: center;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s;
 }
 
 .gender-pill:hover {
   background: #1E1A33;
   border-color: #7F6FDB;
   color: #B8AAFF;
+  transform: scale(1.02);
 }
 
 .gender-pill:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -657,6 +660,100 @@ textarea { resize: vertical; min-height: 130px; }
 }
 
 .start-over-btn:hover { border-color: #7F6FDB; color: #9B8FDB; }
+
+/* ── STEP FADE TRANSITION ── */
+@keyframes step-enter {
+  from { opacity: 0; transform: translateY(7px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.step-fade { animation: step-enter 0.22s ease-out; }
+
+/* ── CELESTIAL LOADER ── */
+@keyframes loader-spin {
+  to { transform: rotate(360deg); }
+}
+
+.celestial-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 2rem 0;
+}
+
+.loader-ring {
+  width: 44px;
+  height: 44px;
+  animation: loader-spin 1.3s linear infinite;
+}
+
+.loader-text {
+  font-size: 13px;
+  color: #555;
+  letter-spacing: 0.2px;
+  margin: 0;
+}
+
+/* ── HEADLINE + CONSTELLATION ── */
+.headline-wrap {
+  margin-bottom: 10px;
+}
+
+.constellation-svg {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.hl {
+  position: relative;
+  display: inline;
+}
+
+.hl::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 2px;
+  background: linear-gradient(90deg, #7F6FDB, #B8AAFF);
+  border-radius: 2px;
+}
+
+/* ── NAMES DIVIDER ── */
+.names-divider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  margin: 0.25rem 0;
+}
+
+.names-divider span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #7F6FDB;
+  opacity: 0.28;
+}
+
+.names-divider span:nth-child(2) {
+  width: 5px;
+  height: 5px;
+  opacity: 0.45;
+}
+
+/* ── FOOTER ── */
+.app-footer {
+  text-align: center;
+  padding: 2rem 1.5rem 3rem;
+  color: #333;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+}
+
+.app-footer p { margin: 0; }
 
 /* ── MOBILE ── */
 @media (max-width: 600px) {

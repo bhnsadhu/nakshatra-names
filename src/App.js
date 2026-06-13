@@ -39,11 +39,11 @@ const CURRENT_YEAR = new Date().getFullYear();
 const YEARS = Array.from({ length: 100 }, (_, i) => CURRENT_YEAR - i);
 
 const TIME_PERIODS = [
-  { id: 'morning',   label: 'Morning',       sub: '6 AM – 12 PM', midpoint: '06:00' },
-  { id: 'afternoon', label: 'Afternoon',      sub: '12 PM – 6 PM', midpoint: '13:00' },
-  { id: 'evening',   label: 'Evening',        sub: '6 PM – 10 PM', midpoint: '18:00' },
-  { id: 'night',     label: 'Night',          sub: '10 PM – 6 AM', midpoint: '22:00' },
-  { id: 'unknown',   label: "I don't know",   sub: '',             midpoint: '12:00' },
+  { id: 'morning',   label: 'Morning',       sub: '6 AM to 12 PM', midpoint: '06:00' },
+  { id: 'afternoon', label: 'Afternoon',      sub: '12 PM to 6 PM', midpoint: '13:00' },
+  { id: 'evening',   label: 'Evening',        sub: '6 PM to 10 PM', midpoint: '18:00' },
+  { id: 'night',     label: 'Night',          sub: '10 PM to 6 AM', midpoint: '22:00' },
+  { id: 'unknown',   label: "I don't know",   sub: '',              midpoint: '12:00' },
 ];
 
 const GEO_DATA = {
@@ -403,10 +403,10 @@ const GEO_DATA = {
     { name: 'Fujairah',      tz: 'Asia/Dubai' },
   ]},
   GB: { name: 'United Kingdom', states: [
-    { name: 'England — London & South East', tz: 'Europe/London' },
-    { name: 'England — Midlands',            tz: 'Europe/London' },
-    { name: 'England — North',               tz: 'Europe/London' },
-    { name: 'England — South West',          tz: 'Europe/London' },
+    { name: 'England: London & South East', tz: 'Europe/London' },
+    { name: 'England: Midlands',            tz: 'Europe/London' },
+    { name: 'England: North',               tz: 'Europe/London' },
+    { name: 'England: South West',          tz: 'Europe/London' },
     { name: 'Scotland',                      tz: 'Europe/London' },
     { name: 'Wales',                         tz: 'Europe/London' },
     { name: 'Northern Ireland',              tz: 'Europe/London' },
@@ -544,6 +544,21 @@ async function generateNames(nakshatra, gender) {
   return data.names;
 }
 
+// ── CELESTIAL LOADER ─────────────────────────────────────────────────────────
+
+function CelestialLoader({ message = 'Calculating your nakshatra' }) {
+  return (
+    <div className="celestial-loader">
+      <svg viewBox="0 0 44 44" className="loader-ring">
+        <circle cx="22" cy="22" r="17" fill="none" stroke="#2A2A2A" strokeWidth="2.5"/>
+        <circle cx="22" cy="22" r="17" fill="none" stroke="#7F6FDB" strokeWidth="2.5"
+          strokeDasharray="53 54" strokeLinecap="round"/>
+      </svg>
+      <p className="loader-text">{message}</p>
+    </div>
+  );
+}
+
 // ── SCIENCE TAB ──────────────────────────────────────────────────────────────
 
 function ScienceSimple({ onGoDeeper }) {
@@ -551,7 +566,7 @@ function ScienceSimple({ onGoDeeper }) {
     <>
       <h1 className="page-title">Why this works.</h1>
       <p className="sci-intro">
-        Nakshatra naming is a 3,000-year-old Vedic tradition. Your birth star — determined by the Moon's position when you were born — points to a set of sacred syllables. Names starting with those syllables are believed to carry the energy of your star.
+        Nakshatra naming is a 3,000-year-old Vedic tradition. Your birth star is determined by the Moon's position when you were born. It points to a set of sacred syllables. Names starting with those syllables are believed to carry the energy of your star.
       </p>
       <div className="sci-steps">
         <div>
@@ -587,28 +602,28 @@ function ScienceDetailed({ onShowLess }) {
           <div className="sci-section-num">01 · WHAT IS A NAKSHATRA</div>
           <div className="sci-section-title">What is a nakshatra</div>
           <div className="sci-section-body">
-            The sky is divided into 27 lunar mansions — nakshatras — each spanning exactly 13°20' of the zodiac. The Moon traverses one nakshatra roughly every 24 hours, completing the full cycle in 27.3 days, the same period as a sidereal month. Each nakshatra is presided over by a specific deity and planetary ruler, and carries a distinct quality or energy that Vedic tradition holds to be imprinted on a person born under it.
+            The sky is divided into 27 lunar mansions (nakshatras), each spanning exactly 13°20' of the zodiac. The Moon traverses one nakshatra roughly every 24 hours, completing the full cycle in 27.3 days, the same period as a sidereal month. Each nakshatra is presided over by a specific deity and planetary ruler, and carries a distinct quality or energy that Vedic tradition holds to be imprinted on a person born under it.
           </div>
         </div>
         <div>
           <div className="sci-section-num">02 · THE CALCULATION</div>
           <div className="sci-section-title">The calculation</div>
           <div className="sci-section-body">
-            This app uses the Chapront lunar theory (1988), which models the Moon's position to within 1 arcminute of accuracy for historical dates. To convert from the tropical (Western) zodiac to the sidereal (Vedic) zodiac, it applies the Lahiri ayanamsha — the official ayanamsha adopted by the Government of India in 1955 for the Indian National Calendar. The current value is approximately 23.85° at the J2000 epoch, precessing at 50.3 arcseconds per year.
+            This app uses the Chapront lunar theory (1988), which models the Moon's position to within 1 arcminute of accuracy for historical dates. To convert from the tropical (Western) zodiac to the sidereal (Vedic) zodiac, it applies the Lahiri ayanamsha, the official ayanamsha adopted by the Government of India in 1955 for the Indian National Calendar. The current value is approximately 23.85° at the J2000 epoch, precessing at 50.3 arcseconds per year.
           </div>
         </div>
         <div>
           <div className="sci-section-num">03 · THE EVIDENCE</div>
           <div className="sci-section-title">The evidence</div>
           <div className="sci-section-body">
-            The Lahiri ayanamsha has been independently verified by modern astronomical software including Swiss Ephemeris — the gold standard used by professional astrologers and researchers worldwide. The Moon's position calculation used here matches within 0.5 degrees of NASA JPL Horizons system outputs for historical dates, well within the precision needed to determine nakshatra and pada correctly. The nakshatra–pada syllable mapping is consistent across all major Vedic texts: the Brihat Parashara Hora Shastra, the Brihat Jataka by Varahamihira, and the Muhurta Chintamani — independent works from different centuries that agree on the syllable assignments without exception.
+            The Lahiri ayanamsha has been independently verified by modern astronomical software including Swiss Ephemeris, the gold standard used by professional astrologers and researchers worldwide. The Moon's position calculation used here matches within 0.5 degrees of NASA JPL Horizons system outputs for historical dates, well within the precision needed to determine nakshatra and pada correctly. The nakshatra-pada syllable mapping is consistent across all major Vedic texts: the Brihat Parashara Hora Shastra, the Brihat Jataka by Varahamihira, and the Muhurta Chintamani. These are independent works from different centuries that agree on the syllable assignments without exception.
           </div>
         </div>
         <div>
           <div className="sci-section-num">04 · NAMING TRADITION</div>
           <div className="sci-section-title">Naming tradition</div>
           <div className="sci-section-body">
-            The tradition is rooted in the Brihat Parashara Hora Shastra, the foundational text of Vedic astrology. Each nakshatra is divided into four padas (quarters), each corresponding to a specific starting syllable — 108 syllables in total across all 27 nakshatras. A child named with their nakshatra's pada syllable is believed to harmonise with the cosmic energy present at the moment of their birth, aligning their identity with the qualities of their birth star.
+            The tradition is rooted in the Brihat Parashara Hora Shastra, the foundational text of Vedic astrology. Each nakshatra is divided into four padas (quarters), each corresponding to a specific starting syllable (108 syllables in total across all 27 nakshatras). A child named with their nakshatra's pada syllable is believed to harmonise with the cosmic energy present at the moment of their birth, aligning their identity with the qualities of their birth star.
           </div>
         </div>
         <div>
@@ -616,11 +631,11 @@ function ScienceDetailed({ onShowLess }) {
           <div className="sci-section-title">Sources</div>
           <div className="sci-sources">
             <div className="sci-source-item">Brihat Parashara Hora Shastra (classical Vedic text, multiple translations)</div>
-            <div className="sci-source-item">Brihat Jataka — Varahamihira (6th century CE)</div>
+            <div className="sci-source-item">Brihat Jataka by Varahamihira (6th century CE)</div>
             <div className="sci-source-item">Muhurta Chintamani (classical Vedic text)</div>
             <div className="sci-source-item">Government of India Lahiri Ayanamsha Standard (1955)</div>
-            <div className="sci-source-item">Chapront Lunar Theory — Chapront-Touzé & Chapront (1988)</div>
-            <div className="sci-source-item">Swiss Ephemeris — Astrodienst AG</div>
+            <div className="sci-source-item">Chapront Lunar Theory, Chapront-Touze &amp; Chapront (1988)</div>
+            <div className="sci-source-item">Swiss Ephemeris by Astrodienst AG</div>
             <div className="sci-source-item">NASA JPL Horizons System</div>
           </div>
         </div>
@@ -839,7 +854,6 @@ export default function App() {
               onClick={() => update('timePeriod', p.id)}
             >
               {p.label}
-              {p.sub && <span className="pill-sub">{p.sub}</span>}
             </button>
           ))}
         </div>
@@ -906,7 +920,7 @@ export default function App() {
       <>
         <p className="step-question">What names are you looking for?</p>
         {loading ? (
-          <div className="loading" style={{ padding: '2rem 0' }}>Calculating your nakshatra...</div>
+          <CelestialLoader message="Calculating your nakshatra" />
         ) : (
           <div className="gender-pills">
             <button className="gender-pill" onClick={() => { update('gender', 'male'); calculate('male'); }}>
@@ -961,9 +975,13 @@ export default function App() {
       </div>
 
       {(loadingNames || names.length > 0) && (
-        <div className="card">
+        <>
+          <div className="names-divider">
+            <span /><span /><span />
+          </div>
+          <div className="card">
           <div className="names-title">Name suggestions for {result.nakshatra.name}</div>
-          {loadingNames && <div className="loading">Generating names...</div>}
+          {loadingNames && <CelestialLoader message="Generating names" />}
           {names.map((n, i) => (
             <div key={i} className="name-item">
               <div className="name-text">{n.name}</div>
@@ -973,7 +991,8 @@ export default function App() {
           {names.length > 0 && (
             <button className="regen-btn" onClick={regenerate}>Suggest different names</button>
           )}
-        </div>
+          </div>
+        </>
       )}
 
       {error && <div className="error" style={{ marginBottom: '1rem' }}>{error}</div>}
@@ -997,10 +1016,24 @@ export default function App() {
       {tab === 'science' && <ScienceTab />}
       {tab === 'ask' && <AskTab />}
 
+
       {tab === 'generator' && (
         <div className="page">
-          <h1 className="page-title">Find your birth star.</h1>
-          <p className="page-subtitle">Discover the nakshatra at your moment of birth and the sacred syllables for naming.</p>
+          <div className="headline-wrap">
+            <svg className="constellation-svg" viewBox="0 0 110 28" width="110" height="28" aria-hidden="true">
+              <circle cx="10" cy="22" r="1.5" fill="#7F6FDB" opacity="0.55"/>
+              <circle cx="32" cy="9" r="1" fill="#7F6FDB" opacity="0.38"/>
+              <circle cx="58" cy="20" r="2" fill="#7F6FDB" opacity="0.65"/>
+              <circle cx="80" cy="6" r="1" fill="#7F6FDB" opacity="0.38"/>
+              <circle cx="100" cy="19" r="1.5" fill="#7F6FDB" opacity="0.48"/>
+              <line x1="10" y1="22" x2="32" y2="9" stroke="#7F6FDB" strokeWidth="0.5" opacity="0.18"/>
+              <line x1="32" y1="9" x2="58" y2="20" stroke="#7F6FDB" strokeWidth="0.5" opacity="0.18"/>
+              <line x1="58" y1="20" x2="80" y2="6" stroke="#7F6FDB" strokeWidth="0.5" opacity="0.18"/>
+              <line x1="80" y1="6" x2="100" y2="19" stroke="#7F6FDB" strokeWidth="0.5" opacity="0.18"/>
+            </svg>
+            <h1 className="page-title">Discover your <span className="hl">birth star</span>.</h1>
+          </div>
+          <p className="page-subtitle">Find the nakshatra at your moment of birth and the sacred syllables for naming.</p>
 
           {!result ? (
             <div className="card">
@@ -1009,13 +1042,18 @@ export default function App() {
                   <div key={s} className={`progress-seg${step >= s ? ' done' : ''}`} />
                 ))}
               </div>
-              {renderStep()}
+              <div key={step} className="step-fade">
+                {renderStep()}
+              </div>
             </div>
           ) : (
             renderResult()
           )}
         </div>
       )}
+      <footer className="app-footer">
+        <p>Made with intention</p>
+      </footer>
     </div>
   );
 }
