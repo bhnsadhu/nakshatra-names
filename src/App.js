@@ -549,10 +549,9 @@ async function generateNames(nakshatra, gender) {
 function CelestialLoader({ message = 'Calculating your nakshatra' }) {
   return (
     <div className="celestial-loader">
-      <svg viewBox="0 0 44 44" className="loader-ring">
-        <circle cx="22" cy="22" r="17" fill="none" stroke="#2A2A2A" strokeWidth="2.5"/>
-        <circle cx="22" cy="22" r="17" fill="none" stroke="#7F6FDB" strokeWidth="2.5"
-          strokeDasharray="53 54" strokeLinecap="round"/>
+      <svg viewBox="0 0 32 44" className="loader-crescent" aria-hidden="true">
+        <path d="M18 4C5 7 3 17 3 23C3 31 8 39 17 42C23 40 27 34 26 23C25 13 22 7 18 4Z"
+          fill="none" stroke="#7F6FDB" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
       <p className="loader-text">{message}</p>
     </div>
@@ -705,7 +704,16 @@ function AskTab() {
             </div>
             <div className="form-group">
               <label>Question</label>
-              <textarea placeholder="What would you like to know?" value={contact.message} onChange={e => updateContact('message', e.target.value)} required />
+              <textarea
+                placeholder="What would you like to know?"
+                value={contact.message}
+                onChange={e => {
+                  updateContact('message', e.target.value);
+                  e.target.style.height = 'auto';
+                  e.target.style.height = e.target.scrollHeight + 'px';
+                }}
+                required
+              />
             </div>
           </div>
           <button type="submit" className="btn" disabled={submitting}>
@@ -977,7 +985,11 @@ export default function App() {
       {(loadingNames || names.length > 0) && (
         <>
           <div className="names-divider">
-            <span /><span /><span />
+            <span style={{opacity: 0.18}} />
+            <span style={{opacity: 0.32}} />
+            <span style={{opacity: 0.55}} />
+            <span style={{opacity: 0.32}} />
+            <span style={{opacity: 0.18}} />
           </div>
           <div className="card">
           <div className="names-title">Name suggestions for {result.nakshatra.name}</div>
@@ -1005,7 +1017,7 @@ export default function App() {
   return (
     <div className="app">
       <nav className="nav">
-        <span className="nav-logo">Nakshatra</span>
+        <span className="nav-logo"><span className="logo-main">Nakshatra</span><span className="logo-sub">Names</span></span>
         <div className="tab-pills">
           <button className={`tab-pill${tab === 'generator' ? ' active' : ''}`} onClick={() => setTab('generator')}>Generator</button>
           <button className={`tab-pill${tab === 'science' ? ' active' : ''}`} onClick={() => setTab('science')}>The science</button>
@@ -1020,16 +1032,9 @@ export default function App() {
       {tab === 'generator' && (
         <div className="page">
           <div className="headline-wrap">
-            <svg className="constellation-svg" viewBox="0 0 110 28" width="110" height="28" aria-hidden="true">
-              <circle cx="10" cy="22" r="1.5" fill="#7F6FDB" opacity="0.55"/>
-              <circle cx="32" cy="9" r="1" fill="#7F6FDB" opacity="0.38"/>
-              <circle cx="58" cy="20" r="2" fill="#7F6FDB" opacity="0.65"/>
-              <circle cx="80" cy="6" r="1" fill="#7F6FDB" opacity="0.38"/>
-              <circle cx="100" cy="19" r="1.5" fill="#7F6FDB" opacity="0.48"/>
-              <line x1="10" y1="22" x2="32" y2="9" stroke="#7F6FDB" strokeWidth="0.5" opacity="0.18"/>
-              <line x1="32" y1="9" x2="58" y2="20" stroke="#7F6FDB" strokeWidth="0.5" opacity="0.18"/>
-              <line x1="58" y1="20" x2="80" y2="6" stroke="#7F6FDB" strokeWidth="0.5" opacity="0.18"/>
-              <line x1="80" y1="6" x2="100" y2="19" stroke="#7F6FDB" strokeWidth="0.5" opacity="0.18"/>
+            <svg className="hero-crescent" viewBox="0 0 32 44" width="24" height="34" aria-hidden="true">
+              <path d="M18 4C5 8 3 17 3.5 23C4 31 9 39 17.5 42C24 39.5 28 33 27 22C25.5 12 22 7 18 4Z"
+                fill="none" stroke="#9B8FDB" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             <h1 className="page-title">Discover your <span className="hl">birth star</span>.</h1>
           </div>

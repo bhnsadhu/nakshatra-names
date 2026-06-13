@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -9,9 +9,10 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
 }
 
-.app { min-height: 100vh; }
+.app { min-height: 100vh; display: flex; flex-direction: column; }
 
 /* ── NAV ── */
 .nav {
@@ -28,10 +29,20 @@ body {
 
 .nav-logo {
   font-size: 16px;
-  font-weight: 600;
-  color: #F5F0FF;
   letter-spacing: -0.2px;
   flex-shrink: 0;
+  line-height: 1;
+}
+
+.logo-main {
+  font-weight: 500;
+  color: #F5F0FF;
+}
+
+.logo-sub {
+  font-weight: 300;
+  color: #888;
+  margin-left: 5px;
 }
 
 .tab-pills {
@@ -53,32 +64,34 @@ body {
   background: transparent;
   color: #555;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
   white-space: nowrap;
   line-height: 1.4;
 }
 
 .tab-pill:hover { color: #9B8FDB; }
-.tab-pill.active { background: #7F6FDB; color: #fff; }
+.tab-pill.active { background: #7F6FDB; color: #fff; box-shadow: 0 0 12px rgba(127, 111, 219, 0.3); }
 
 /* ── PAGE WRAPPER ── */
 .page {
   max-width: 640px;
   margin: 0 auto;
   padding: 3rem 1.5rem;
+  flex: 1;
 }
 
 .page-title {
   font-size: 28px;
   font-weight: 600;
   color: #F5F0FF;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.6px;
   line-height: 1.2;
   margin-bottom: 10px;
 }
 
 .page-subtitle {
   font-size: 15px;
+  font-weight: 300;
   color: #555;
   line-height: 1.65;
   margin-bottom: 2rem;
@@ -89,7 +102,7 @@ body {
   background: #141414;
   border: 1px solid #2A2A2A;
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 1.75rem;
   margin-bottom: 1rem;
 }
 
@@ -110,15 +123,16 @@ body {
 
 label {
   font-size: 11px;
-  font-weight: 500;
-  color: #555;
+  font-weight: 400;
+  color: #333;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.1em;
 }
 
 input, select, textarea {
   font-family: 'Inter', sans-serif;
   font-size: 15px;
+  font-weight: 400;
   padding: 10px 12px;
   border-radius: 8px;
   border: 1px solid #2A2A2A;
@@ -136,13 +150,13 @@ input:focus, select:focus, textarea:focus {
   box-shadow: 0 0 0 3px rgba(127, 111, 219, 0.12);
 }
 
-input::placeholder, textarea::placeholder { color: #333; }
+input::placeholder, textarea::placeholder { color: #2E2E2E; }
 
 select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23555' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
 
 select option { background: #141414; color: #F5F0FF; }
 
-textarea { resize: vertical; min-height: 130px; }
+textarea { resize: none; min-height: 80px; overflow: hidden; }
 
 .btn {
   width: 100%;
@@ -160,7 +174,7 @@ textarea { resize: vertical; min-height: 130px; }
   letter-spacing: -0.1px;
 }
 
-.btn:hover { opacity: 0.9; transform: scale(1.01); }
+.btn:hover { opacity: 0.88; transform: scale(0.97); }
 .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
 .error {
@@ -170,17 +184,23 @@ textarea { resize: vertical; min-height: 130px; }
   padding: 10px 14px;
   border-radius: 8px;
   font-size: 14px;
+  font-weight: 300;
   margin-top: 0.75rem;
   line-height: 1.5;
 }
 
 /* ── RESULT CARD ── */
+@keyframes result-fade-in {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 .nak-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
 }
 
 .nak-name {
@@ -189,10 +209,12 @@ textarea { resize: vertical; min-height: 130px; }
   color: #F5F0FF;
   letter-spacing: -0.5px;
   line-height: 1.1;
+  animation: result-fade-in 0.4s ease;
 }
 
 .nak-sub {
   font-size: 13px;
+  font-weight: 300;
   color: #9B8FDB;
   margin-top: 5px;
   line-height: 1.5;
@@ -213,24 +235,25 @@ textarea { resize: vertical; min-height: 130px; }
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
 }
 
 .meta-item {
   background: #0A0A0A;
-  border: 1px solid #2A2A2A;
+  border: 1px solid #222;
   border-radius: 8px;
-  padding: 10px 14px;
+  padding: 12px 14px;
 }
 
 .meta-item.full { grid-column: 1 / -1; }
 
 .meta-label {
   font-size: 11px;
-  color: #555;
+  font-weight: 400;
+  color: #333;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
-  margin-bottom: 4px;
+  letter-spacing: 0.1em;
+  margin-bottom: 5px;
 }
 
 .meta-value {
@@ -243,10 +266,11 @@ textarea { resize: vertical; min-height: 130px; }
 
 .section-label {
   font-size: 11px;
-  color: #555;
+  font-weight: 400;
+  color: #333;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
-  margin-bottom: 10px;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
 }
 
 .syllables-row {
@@ -256,27 +280,32 @@ textarea { resize: vertical; min-height: 130px; }
 }
 
 .chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: #1E1A33;
   color: #B8AAFF;
   font-size: 15px;
   font-weight: 500;
-  padding: 6px 18px;
+  padding: 6px 16px;
   border-radius: 20px;
-  transition: box-shadow 0.18s;
+  transition: box-shadow 0.18s, transform 0.15s;
 }
 
 .chip:hover {
-  box-shadow: 0 0 14px rgba(127, 111, 219, 0.38);
+  box-shadow: 0 0 8px rgba(184, 170, 255, 0.3);
+  transform: scale(0.97);
 }
 
 .moon-pos {
   font-size: 11px;
-  color: #333;
-  margin-top: 1rem;
+  font-weight: 300;
+  color: #2E2E2E;
+  margin-top: 1.25rem;
   line-height: 1.6;
 }
 
-/* ── MULTI-SELECT ROW (date / time dropdowns) ── */
+/* ── MULTI-SELECT ROW ── */
 .multi-select-row {
   display: grid;
   grid-template-columns: 2fr 1fr 1.5fr;
@@ -288,9 +317,7 @@ textarea { resize: vertical; min-height: 130px; }
 }
 
 /* ── CITY AUTOCOMPLETE ── */
-.city-wrap {
-  position: relative;
-}
+.city-wrap { position: relative; }
 
 .city-dropdown {
   position: absolute;
@@ -321,52 +348,31 @@ textarea { resize: vertical; min-height: 130px; }
 /* ── NAMES ── */
 .names-title {
   font-size: 11px;
-  font-weight: 500;
-  color: #555;
+  font-weight: 400;
+  color: #333;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
-  margin-bottom: 1rem;
-}
-
-.loading {
-  text-align: center;
-  padding: 2rem;
-  color: #555;
-  font-size: 14px;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.25rem;
 }
 
 .name-item {
-  padding: 14px 0;
+  padding: 16px 0;
   border-bottom: 1px solid #1E1E1E;
 }
 
 .name-item:last-of-type { border-bottom: none; }
 
-.name-row {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  margin-bottom: 4px;
-}
-
 .name-text {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   color: #F5F0FF;
   letter-spacing: -0.3px;
-}
-
-.name-gender {
-  font-size: 11px;
-  color: #9B8FDB;
-  background: #1E1A33;
-  padding: 2px 9px;
-  border-radius: 10px;
-  font-weight: 500;
+  margin-bottom: 4px;
 }
 
 .name-meaning {
   font-size: 13px;
+  font-weight: 300;
   color: #555;
   line-height: 1.55;
 }
@@ -380,32 +386,33 @@ textarea { resize: vertical; min-height: 130px; }
   padding: 7px 16px;
   border-radius: 8px;
   cursor: pointer;
-  margin-top: 1rem;
-  transition: border-color 0.15s, color 0.15s;
+  margin-top: 1.25rem;
+  transition: border-color 0.15s, color 0.15s, transform 0.15s;
 }
 
-.regen-btn:hover { border-color: #7F6FDB; color: #9B8FDB; }
+.regen-btn:hover { border-color: #7F6FDB; color: #9B8FDB; transform: scale(0.97); }
 
 /* ── SCIENCE TAB ── */
 .sci-intro {
   font-size: 15px;
+  font-weight: 300;
   color: #9B8FDB;
-  line-height: 1.75;
-  margin-bottom: 2rem;
+  line-height: 1.8;
+  margin-bottom: 2.5rem;
 }
 
 .sci-steps {
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: 2rem;
   margin-bottom: 2.5rem;
 }
 
 .sci-step-num {
   font-size: 11px;
-  color: #7F6FDB;
   font-weight: 600;
-  letter-spacing: 1px;
+  color: #7F6FDB;
+  letter-spacing: 0.1em;
   margin-bottom: 4px;
 }
 
@@ -413,14 +420,15 @@ textarea { resize: vertical; min-height: 130px; }
   font-size: 15px;
   font-weight: 600;
   color: #F5F0FF;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   letter-spacing: -0.2px;
 }
 
 .sci-step-desc {
   font-size: 14px;
+  font-weight: 300;
   color: #555;
-  line-height: 1.65;
+  line-height: 1.7;
 }
 
 .sci-toggle-btn {
@@ -433,23 +441,23 @@ textarea { resize: vertical; min-height: 130px; }
   padding: 8px 18px;
   border-radius: 8px;
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
+  transition: border-color 0.15s, color 0.15s, transform 0.15s;
 }
 
-.sci-toggle-btn:hover { border-color: #7F6FDB; color: #B8AAFF; }
+.sci-toggle-btn:hover { border-color: #7F6FDB; color: #B8AAFF; transform: scale(0.97); }
 
 .sci-sections {
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 2.75rem;
   margin-bottom: 2.5rem;
 }
 
 .sci-section-num {
   font-size: 11px;
-  color: #7F6FDB;
   font-weight: 600;
-  letter-spacing: 1px;
+  color: #7F6FDB;
+  letter-spacing: 0.1em;
   margin-bottom: 6px;
 }
 
@@ -463,8 +471,9 @@ textarea { resize: vertical; min-height: 130px; }
 
 .sci-section-body {
   font-size: 14px;
+  font-weight: 300;
   color: #555;
-  line-height: 1.75;
+  line-height: 1.8;
 }
 
 .sci-sources {
@@ -476,6 +485,7 @@ textarea { resize: vertical; min-height: 130px; }
 
 .sci-source-item {
   font-size: 13px;
+  font-weight: 300;
   color: #555;
   padding-left: 14px;
   position: relative;
@@ -493,7 +503,7 @@ textarea { resize: vertical; min-height: 130px; }
 .form-stack {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .contact-success {
@@ -503,6 +513,7 @@ textarea { resize: vertical; min-height: 130px; }
   padding: 10px 14px;
   border-radius: 8px;
   font-size: 14px;
+  font-weight: 300;
   margin-top: 0.75rem;
   line-height: 1.5;
 }
@@ -511,14 +522,14 @@ textarea { resize: vertical; min-height: 130px; }
 .progress-bar {
   display: flex;
   gap: 6px;
-  margin-bottom: 2rem;
+  margin-bottom: 2.25rem;
 }
 
 .progress-seg {
   flex: 1;
-  height: 3px;
+  height: 2px;
   border-radius: 2px;
-  background: #2A2A2A;
+  background: #222;
   transition: background 0.3s;
 }
 
@@ -528,15 +539,16 @@ textarea { resize: vertical; min-height: 130px; }
   font-size: 20px;
   font-weight: 600;
   color: #F5F0FF;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.4px;
   line-height: 1.25;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
 }
 
 .step-note {
   font-size: 13px;
+  font-weight: 300;
   color: #9B8FDB;
-  line-height: 1.55;
+  line-height: 1.6;
   padding: 10px 14px;
   background: rgba(127, 111, 219, 0.07);
   border: 1px solid rgba(127, 111, 219, 0.18);
@@ -552,7 +564,7 @@ textarea { resize: vertical; min-height: 130px; }
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   gap: 8px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
   padding-bottom: 2px;
 }
 
@@ -576,7 +588,7 @@ textarea { resize: vertical; min-height: 130px; }
   flex-shrink: 0;
 }
 
-.time-pill:hover { border-color: #7F6FDB; color: #B8AAFF; transform: scale(1.03); }
+.time-pill:hover { border-color: #7F6FDB; color: #B8AAFF; transform: scale(0.97); }
 
 .time-pill.selected {
   background: #1E1A33;
@@ -586,20 +598,21 @@ textarea { resize: vertical; min-height: 130px; }
 
 /* ── OPTIONAL EXACT TIME ── */
 .optional-section {
-  margin-bottom: 1.5rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid #2A2A2A;
+  margin-bottom: 1.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #1E1E1E;
 }
 
 .optional-label {
   font-size: 11px;
-  color: #555;
+  font-weight: 400;
+  color: #333;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.1em;
   margin-bottom: 10px;
 }
 
-/* ── GENDER PILLS (step 4) ── */
+/* ── GENDER PILLS ── */
 .gender-pills {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -608,7 +621,7 @@ textarea { resize: vertical; min-height: 130px; }
 }
 
 .gender-pill {
-  padding: 22px 16px;
+  padding: 24px 16px;
   background: #141414;
   border: 1px solid #2A2A2A;
   border-radius: 12px;
@@ -625,7 +638,13 @@ textarea { resize: vertical; min-height: 130px; }
   background: #1E1A33;
   border-color: #7F6FDB;
   color: #B8AAFF;
-  transform: scale(1.02);
+  transform: scale(0.97);
+}
+
+.gender-pill:active {
+  transform: scale(0.94);
+  background: #251F40;
+  transition: transform 0.08s, background 0.08s;
 }
 
 .gender-pill:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -635,90 +654,85 @@ textarea { resize: vertical; min-height: 130px; }
   display: inline-block;
   background: transparent;
   border: none;
-  color: #555;
+  color: #444;
   font-family: 'Inter', sans-serif;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 400;
   cursor: pointer;
   padding: 0;
-  margin-bottom: 1rem;
-  transition: color 0.15s;
+  margin-bottom: 1.25rem;
+  transition: color 0.15s, transform 0.15s;
 }
 
-.back-btn:hover { color: #9B8FDB; }
+.back-btn:hover { color: #9B8FDB; transform: scale(0.97); }
 
 .start-over-btn {
   background: transparent;
   border: 1px solid #2A2A2A;
-  color: #555;
+  color: #444;
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   padding: 7px 16px;
   border-radius: 8px;
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
+  transition: border-color 0.15s, color 0.15s, transform 0.15s;
 }
 
-.start-over-btn:hover { border-color: #7F6FDB; color: #9B8FDB; }
+.start-over-btn:hover { border-color: #7F6FDB; color: #9B8FDB; transform: scale(0.97); }
 
 /* ── STEP FADE TRANSITION ── */
 @keyframes step-enter {
-  from { opacity: 0; transform: translateY(7px); }
+  from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-.step-fade { animation: step-enter 0.22s ease-out; }
+.step-fade { animation: step-enter 0.25s ease-out; }
 
 /* ── CELESTIAL LOADER ── */
-@keyframes loader-spin {
-  to { transform: rotate(360deg); }
+@keyframes crescent-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.94); }
+  50%       { opacity: 1;   transform: scale(1.06); }
 }
 
 .celestial-loader {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 2rem 0;
+  gap: 14px;
+  padding: 2.25rem 0;
 }
 
-.loader-ring {
-  width: 44px;
-  height: 44px;
-  animation: loader-spin 1.3s linear infinite;
+.loader-crescent {
+  width: 36px;
+  height: 48px;
+  animation: crescent-pulse 2.4s ease-in-out infinite;
 }
 
 .loader-text {
   font-size: 13px;
-  color: #555;
-  letter-spacing: 0.2px;
+  font-weight: 300;
+  color: #444;
+  letter-spacing: 0.1px;
   margin: 0;
 }
 
-/* ── HEADLINE + CONSTELLATION ── */
+/* ── HEADLINE ── */
 .headline-wrap {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
-.constellation-svg {
+.hero-crescent {
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
+  opacity: 0.9;
 }
 
 .hl {
-  position: relative;
-  display: inline;
-}
-
-.hl::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -3px;
-  height: 2px;
-  background: linear-gradient(90deg, #7F6FDB, #B8AAFF);
-  border-radius: 2px;
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: rgba(127, 111, 219, 0.6);
+  text-underline-offset: 5px;
+  text-decoration-thickness: 1.5px;
 }
 
 /* ── NAMES DIVIDER ── */
@@ -726,8 +740,8 @@ textarea { resize: vertical; min-height: 130px; }
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 7px;
-  margin: 0.25rem 0;
+  gap: 8px;
+  margin: 0.5rem 0;
 }
 
 .names-divider span {
@@ -735,22 +749,17 @@ textarea { resize: vertical; min-height: 130px; }
   height: 4px;
   border-radius: 50%;
   background: #7F6FDB;
-  opacity: 0.28;
-}
-
-.names-divider span:nth-child(2) {
-  width: 5px;
-  height: 5px;
-  opacity: 0.45;
 }
 
 /* ── FOOTER ── */
 .app-footer {
   text-align: center;
   padding: 2rem 1.5rem 3rem;
-  color: #333;
+  color: #2A2A2A;
   font-size: 12px;
+  font-weight: 300;
   letter-spacing: 0.3px;
+  margin-top: auto;
 }
 
 .app-footer p { margin: 0; }
@@ -788,7 +797,7 @@ textarea { resize: vertical; min-height: 130px; }
   .time-pill { padding: 8px 14px; font-size: 13px; }
 
   .gender-pills { gap: 10px; }
-  .gender-pill { padding: 18px 12px; font-size: 15px; }
+  .gender-pill { padding: 20px 12px; font-size: 15px; }
 
   .step-question { font-size: 18px; }
 }
