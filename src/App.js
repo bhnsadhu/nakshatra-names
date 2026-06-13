@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
 
 // ── STATIC DATA ───────────────────────────────────────────────────────────────
@@ -34,6 +34,7 @@ const NAKSHATRAS = [
 ];
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const HOURS = ['1','2','3','4','5','6','7','8','9','10','11','12'];
 const MINUTES = ['00','05','10','15','20','25','30','35','40','45','50','55'];
 const CURRENT_YEAR = new Date().getFullYear();
 const YEARS = Array.from({ length: 100 }, (_, i) => CURRENT_YEAR - i);
@@ -544,15 +545,62 @@ async function generateNames(nakshatra, gender) {
   return data.names;
 }
 
+// ── SCROLL PICKER ────────────────────────────────────────────────────────────
+
+const ITEM_H = 38;
+
+function ScrollPicker({ values, selected, onChange }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const idx = values.indexOf(String(selected));
+    if (ref.current) {
+      ref.current.scrollTop = (idx >= 0 ? idx : 0) * ITEM_H;
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleScroll = () => {
+    if (!ref.current) return;
+    const idx = Math.round(ref.current.scrollTop / ITEM_H);
+    const clamped = Math.max(0, Math.min(values.length - 1, idx));
+    if (values[clamped] !== String(selected)) onChange(values[clamped]);
+  };
+
+  return (
+    <div className="sp-wrap">
+      <div ref={ref} className="sp-list" onScroll={handleScroll}>
+        <div className="sp-pad" />
+        {values.map(v => (
+          <div
+            key={v}
+            className={`sp-item${String(v) === String(selected) ? ' sel' : ''}`}
+            onClick={() => {
+              onChange(v);
+              const idx = values.indexOf(v);
+              ref.current?.scrollTo({ top: idx * ITEM_H, behavior: 'smooth' });
+            }}
+          >
+            {v}
+          </div>
+        ))}
+        <div className="sp-pad" />
+      </div>
+      <div className="sp-overlay" />
+      <div className="sp-center-bar" />
+    </div>
+  );
+}
+
 // ── CELESTIAL LOADER ─────────────────────────────────────────────────────────
 
 function CelestialLoader({ message = 'Calculating your nakshatra' }) {
   return (
     <div className="celestial-loader">
-      <svg viewBox="0 0 32 44" className="loader-crescent" aria-hidden="true">
-        <path d="M18 4C5 7 3 17 3 23C3 31 8 39 17 42C23 40 27 34 26 23C25 13 22 7 18 4Z"
-          fill="none" stroke="#7F6FDB" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
+      <div className="pulse-dots">
+        <span className="pulse-dot" style={{ animationDelay: '0s' }} />
+        <span className="pulse-dot" style={{ animationDelay: '0.22s' }} />
+        <span className="pulse-dot" style={{ animationDelay: '0.44s' }} />
+      </div>
       <p className="loader-text">{message}</p>
     </div>
   );
@@ -875,18 +923,25 @@ export default function App() {
         {form.timePeriod && form.timePeriod !== 'unknown' && (
           <div className="optional-section">
             <div className="optional-label">Exact time (optional)</div>
-            <div className="multi-select-row time-cols">
-              <select value={form.timeHour} onChange={e => update('timeHour', e.target.value)}>
-                <option value="">Hour</option>
-                {Array.from({ length: 12 }, (_, i) => i + 1).map(h => <option key={h} value={h}>{h}</option>)}
-              </select>
-              <select value={form.timeMinute} onChange={e => update('timeMinute', e.target.value)}>
-                {MINUTES.map(m => <option key={m} value={m}>{m}</option>)}
-              </select>
-              <select value={form.timeAmPm} onChange={e => update('timeAmPm', e.target.value)}>
-                <option value="AM">AM</option>
-                <option value="PM">PM</option>
-              </select>
+            <div className="time-picker-row">
+              <ScrollPicker
+                values={HOURS}
+                selected={form.timeHour || '12'}
+                onChange={v => update('timeHour', v)}
+              />
+              <div className="time-sep">:</div>
+              <ScrollPicker
+                values={MINUTES}
+                selected={form.timeMinute}
+                onChange={v => update('timeMinute', v)}
+              />
+              <button
+                type="button"
+                className="ampm-btn"
+                onClick={() => update('timeAmPm', form.timeAmPm === 'AM' ? 'PM' : 'AM')}
+              >
+                {form.timeAmPm}
+              </button>
             </div>
           </div>
         )}
@@ -1017,7 +1072,7 @@ export default function App() {
   return (
     <div className="app">
       <nav className="nav">
-        <span className="nav-logo"><span className="logo-main">Nakshatra</span><span className="logo-sub">Names</span></span>
+        <span className="nav-logo">Nakshatra Names</span>
         <div className="tab-pills">
           <button className={`tab-pill${tab === 'generator' ? ' active' : ''}`} onClick={() => setTab('generator')}>Generator</button>
           <button className={`tab-pill${tab === 'science' ? ' active' : ''}`} onClick={() => setTab('science')}>The science</button>
@@ -1031,8 +1086,8 @@ export default function App() {
 
       {tab === 'generator' && (
         <div className="page">
-          <h1 className="page-title">Discover your birth star.</h1>
-          <p className="page-subtitle">Find the nakshatra at your moment of birth and the sacred syllables for naming.</p>
+          <h1 className="page-title">Discover your <span className="hl">birth star</span>.</h1>
+          <p className="page-subtitle">Find your birth star and the sacred syllables for naming.</p>
 
           {!result ? (
             <>

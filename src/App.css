@@ -28,21 +28,12 @@ body {
 }
 
 .nav-logo {
-  font-size: 16px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #F5F0FF;
   letter-spacing: -0.2px;
   flex-shrink: 0;
   line-height: 1;
-}
-
-.logo-main {
-  font-weight: 500;
-  color: #F5F0FF;
-}
-
-.logo-sub {
-  font-weight: 300;
-  color: #888;
-  margin-left: 5px;
 }
 
 .tab-pills {
@@ -90,11 +81,14 @@ body {
 }
 
 .page-subtitle {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 300;
   color: #555;
   line-height: 1.6;
   margin-bottom: 1.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ── CARD ── */
@@ -691,23 +685,31 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
 .step-fade { animation: step-enter 0.25s ease-out; }
 
 /* ── CELESTIAL LOADER ── */
-@keyframes crescent-pulse {
-  0%, 100% { opacity: 0.4; transform: scale(0.94); }
-  50%       { opacity: 1;   transform: scale(1.06); }
+@keyframes dot-pulse {
+  0%, 80%, 100% { opacity: 0.2; transform: scale(0.75); }
+  40%            { opacity: 1;   transform: scale(1); }
 }
 
 .celestial-loader {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
-  padding: 2.25rem 0;
+  gap: 12px;
+  padding: 2rem 0;
 }
 
-.loader-crescent {
-  width: 36px;
-  height: 48px;
-  animation: crescent-pulse 2.4s ease-in-out infinite;
+.pulse-dots {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #7F6FDB;
+  animation: dot-pulse 1.4s ease-in-out infinite;
 }
 
 .loader-text {
@@ -718,6 +720,126 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
   margin: 0;
 }
 
+
+/* ── HEADLINE UNDERLINE ── */
+.hl {
+  position: relative;
+  display: inline;
+}
+
+.hl::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 2px;
+  background: #7F6FDB;
+  border-radius: 1px;
+}
+
+/* ── SCROLL PICKER ── */
+.time-picker-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sp-wrap {
+  position: relative;
+  flex: 1;
+  max-width: 80px;
+}
+
+.sp-list {
+  height: 114px;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  background: #141414;
+  border-radius: 8px;
+  border: 0.5px solid #2A2A2A;
+}
+
+.sp-list::-webkit-scrollbar { display: none; }
+
+.sp-pad {
+  height: 38px;
+  flex-shrink: 0;
+}
+
+.sp-item {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 400;
+  color: #383838;
+  scroll-snap-align: center;
+  cursor: pointer;
+  transition: color 0.12s;
+  user-select: none;
+}
+
+.sp-item.sel {
+  color: #F5F0FF;
+  font-weight: 600;
+}
+
+.sp-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(20, 20, 20, 0.88) 0%,
+    transparent 33%,
+    transparent 67%,
+    rgba(20, 20, 20, 0.88) 100%
+  );
+  pointer-events: none;
+  border-radius: 8px;
+}
+
+.sp-center-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 38px;
+  transform: translateY(-50%);
+  border-top: 0.5px solid #2A2A2A;
+  border-bottom: 0.5px solid #2A2A2A;
+  pointer-events: none;
+}
+
+.time-sep {
+  font-size: 16px;
+  font-weight: 300;
+  color: #444;
+}
+
+.ampm-btn {
+  width: 52px;
+  height: 114px;
+  background: #141414;
+  border: 0.5px solid #2A2A2A;
+  border-radius: 8px;
+  color: #9B8FDB;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
+  flex-shrink: 0;
+}
+
+.ampm-btn:hover {
+  background: #1E1A33;
+  color: #B8AAFF;
+  transform: scale(0.97);
+}
 
 /* ── NAMES DIVIDER ── */
 .names-divider {
