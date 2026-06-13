@@ -65,22 +65,11 @@ body {
 
 /* ── PAGE WRAPPER ── */
 .page {
-  max-width: 900px;
+  max-width: 720px;
   margin: 0 auto;
-  padding: 2rem 1rem 3rem;
+  padding: 2.5rem 1.5rem 3rem;
   flex: 1;
-}
-
-.page-wide {
-  max-width: none;
-  padding-left: 2rem;
-  padding-right: 2rem;
-}
-
-.page-full {
-  max-width: none;
-  padding-left: 2rem;
-  padding-right: 2rem;
+  width: 100%;
 }
 
 /* ── STEP SCREEN LAYOUT ── */
@@ -110,16 +99,29 @@ body {
   gap: 0.75rem;
 }
 
+/* ── PAGE TITLES (Science + Ask) ── */
 .page-title {
-  font-size: 26px;
+  font-size: 36px;
   font-weight: 600;
   color: #F5F0FF;
-  letter-spacing: -0.6px;
-  line-height: 1.2;
+  letter-spacing: -0.8px;
+  line-height: 1.15;
   margin-bottom: 8px;
+  text-align: center;
 }
 
+.page-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  color: #555;
+  line-height: 1.5;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* ── GENERATOR HERO ── */
 .generator-hero {
+  text-align: center;
   margin-bottom: 2rem;
 }
 
@@ -137,14 +139,6 @@ body {
   font-weight: 400;
   color: #555;
   line-height: 1.5;
-}
-
-.page-subtitle {
-  font-size: 13px;
-  font-weight: 300;
-  color: #555;
-  line-height: 1.65;
-  margin-bottom: 1.5rem;
 }
 
 /* ── CARD ── */
@@ -211,7 +205,7 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
 
 .btn {
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   border-radius: 8px;
   border: none;
   background: #7F6FDB;
@@ -220,7 +214,6 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
-  margin-top: 1rem;
   transition: opacity 0.15s, transform 0.15s;
   letter-spacing: -0.1px;
 }
@@ -422,7 +415,7 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
 }
 
 .name-meaning {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 300;
   color: #555;
   line-height: 1.55;
@@ -445,11 +438,12 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
 
 /* ── SCIENCE TAB ── */
 .sci-intro {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 300;
   color: #9B8FDB;
   line-height: 1.8;
   margin-bottom: 2.5rem;
+  text-align: center;
 }
 
 .sci-steps {
@@ -570,22 +564,21 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
 }
 
 /* ── STEP FLOW ── */
-.progress-dots {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 1.75rem;
+.step-progress-bar {
+  width: 100%;
+  height: 3px;
+  background: #1F1F1F;
+  border-radius: 2px;
+  margin-bottom: 2rem;
+  overflow: hidden;
 }
 
-.progress-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #2A2A2A;
-  transition: background 0.3s;
+.step-progress-fill {
+  height: 100%;
+  background: #7F6FDB;
+  border-radius: 2px;
+  transition: width 0.35s ease;
 }
-
-.progress-dot.done { background: #7F6FDB; }
 
 .step-question {
   font-size: 18px;
@@ -594,6 +587,7 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
   letter-spacing: -0.3px;
   line-height: 1.25;
   margin-bottom: 1.25rem;
+  text-align: center;
 }
 
 .step-note {
@@ -618,6 +612,7 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
   gap: 8px;
   margin-bottom: 1.25rem;
   padding-bottom: 2px;
+  justify-content: center;
 }
 
 .time-pills::-webkit-scrollbar { display: none; }
@@ -671,6 +666,9 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   margin-bottom: 0.5rem;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .gender-pill {
@@ -704,7 +702,8 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
 
 /* ── BACK / START OVER BUTTONS ── */
 .back-btn {
-  display: inline-block;
+  display: block;
+  width: 100%;
   background: transparent;
   border: none;
   color: #444;
@@ -712,8 +711,8 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
   font-size: 13px;
   font-weight: 400;
   cursor: pointer;
-  padding: 0;
-  margin-bottom: 1rem;
+  padding: 6px 0;
+  text-align: center;
   transition: color 0.15s, transform 0.15s;
 }
 
@@ -914,10 +913,11 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
   }
 
   .page {
-    padding: 2rem 1rem;
+    padding: 2rem 1.25rem 3rem;
   }
 
-  .page-title { font-size: 22px; }
+  .page-title { font-size: 28px; }
+  .generator-title { font-size: 28px; }
 
   .form-grid { grid-template-columns: 1fr; }
   .form-group.full { grid-column: 1; }
@@ -934,6 +934,4 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
 
   .gender-pills { gap: 10px; }
   .gender-pill { padding: 20px 12px; font-size: 15px; }
-
-  .step-question { font-size: 18px; }
 }

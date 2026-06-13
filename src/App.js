@@ -664,7 +664,7 @@ function ScienceContent() {
 
 function ScienceTab() {
   return (
-    <div className="page page-full">
+    <div className="page">
       <ScienceContent />
     </div>
   );
@@ -702,7 +702,7 @@ function AskTab() {
   };
 
   return (
-    <div className="page page-wide">
+    <div className="page">
       <h1 className="page-title">Have a question?</h1>
       <p className="page-subtitle">Ask anything about nakshatras, Vedic astrology, or how this works.<br />We'll get back to you.</p>
       <form onSubmit={submit}>
@@ -1066,7 +1066,7 @@ export default function App() {
 
 
       {tab === 'generator' && (
-        <div className="page page-wide">
+        <div className="page">
           {!result ? (
             <div className="step-screen">
               <div className="generator-hero">
@@ -1074,10 +1074,8 @@ export default function App() {
                 <p className="generator-subtitle">Find your birth star and the sacred syllables for naming.</p>
               </div>
               <div className="step-top">
-                <div className="progress-dots">
-                  {[1, 2, 3, 4].map(s => (
-                    <div key={s} className={`progress-dot${step >= s ? ' done' : ''}`} />
-                  ))}
+                <div className="step-progress-bar">
+                  <div className="step-progress-fill" style={{ width: `${step * 25}%` }} />
                 </div>
                 <div key={step} className="step-fade">
                   {renderStep()}
