@@ -35,7 +35,7 @@ const NAKSHATRAS = [
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const HOURS = ['1','2','3','4','5','6','7','8','9','10','11','12'];
-const MINUTES = ['00','05','10','15','20','25','30','35','40','45','50','55'];
+const MINUTES = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0'));
 const CURRENT_YEAR = new Date().getFullYear();
 const YEARS = Array.from({ length: 100 }, (_, i) => CURRENT_YEAR - i);
 
@@ -695,7 +695,7 @@ function ScienceDetailed({ onShowLess }) {
 function ScienceTab() {
   const [view, setView] = useState('simple');
   return (
-    <div className="page">
+    <div className="page page-full">
       {view === 'simple'
         ? <ScienceSimple onGoDeeper={() => setView('detailed')} />
         : <ScienceDetailed onShowLess={() => setView('simple')} />
@@ -738,7 +738,7 @@ function AskTab() {
   return (
     <div className="page">
       <h1 className="page-title">Have a question?</h1>
-      <p className="page-subtitle">Ask anything about nakshatras, Vedic astrology, or how this works. We'll get back to you.</p>
+      <p className="page-subtitle">Ask anything about nakshatras, Vedic astrology, or how this works.<br />We'll get back to you.</p>
       <div className="card">
         <form onSubmit={submit}>
           <div className="form-stack">
@@ -1086,7 +1086,7 @@ export default function App() {
 
       {tab === 'generator' && (
         <div className="page">
-          <h1 className="page-title">Discover your <span className="hl">birth star</span>.</h1>
+          <h1 className="page-title">Discover your <span className="hl-wrap">birth star<svg className="hl-stroke" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true"><path d="M0 5.5 C18 3.5 36 7 54 5 C72 3 88 6.5 100 4.5" fill="none" stroke="#7F6FDB" strokeWidth="2" strokeLinecap="round" opacity="0.7"/></svg></span>.</h1>
           <p className="page-subtitle">Find your birth star and the sacred syllables for naming.</p>
 
           {!result ? (
