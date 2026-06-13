@@ -887,15 +887,32 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  margin: 0.5rem 0;
+  gap: 10px;
+  margin: 1.5rem 0;
 }
 
-.names-divider span {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #7F6FDB;
+.sparkle {
+  color: #7F6FDB;
+  line-height: 1;
+  user-select: none;
+}
+
+.sparkle-outer {
+  font-size: 9px;
+  opacity: 0.35;
+}
+
+.sparkle-inner {
+  font-size: 13px;
+  opacity: 0.7;
+  color: #B8AAFF;
+}
+
+.sparkle-center {
+  font-size: 18px;
+  opacity: 1;
+  color: #B8AAFF;
+  text-shadow: 0 0 10px rgba(127, 111, 219, 0.6), 0 0 20px rgba(127, 111, 219, 0.3);
 }
 
 

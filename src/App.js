@@ -1021,11 +1021,11 @@ export default function App() {
       {(loadingNames || names.length > 0) && (
         <>
           <div className="names-divider">
-            <span style={{opacity: 0.18}} />
-            <span style={{opacity: 0.32}} />
-            <span style={{opacity: 0.55}} />
-            <span style={{opacity: 0.32}} />
-            <span style={{opacity: 0.18}} />
+            <span className="sparkle sparkle-outer">✦</span>
+            <span className="sparkle sparkle-inner">✦</span>
+            <span className="sparkle sparkle-center">✦</span>
+            <span className="sparkle sparkle-inner">✦</span>
+            <span className="sparkle sparkle-outer">✦</span>
           </div>
           <div className="card">
           <div className="names-title">Name suggestions for {result.nakshatra.name}</div>
