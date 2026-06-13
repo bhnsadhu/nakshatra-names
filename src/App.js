@@ -608,41 +608,12 @@ function CelestialLoader({ message = 'Calculating your nakshatra' }) {
 
 // ── SCIENCE TAB ──────────────────────────────────────────────────────────────
 
-function ScienceSimple({ onGoDeeper }) {
+function ScienceContent() {
   return (
     <>
       <h1 className="page-title">Why this works.</h1>
       <p className="sci-intro">
         Nakshatra naming is a 3,000-year-old Vedic tradition. Your birth star is determined by the Moon's position when you were born. It points to a set of sacred syllables. Names starting with those syllables are believed to carry the energy of your star.
-      </p>
-      <div className="sci-steps">
-        <div>
-          <div className="sci-step-num">01 · THE MOON'S POSITION</div>
-          <div className="sci-step-label">The Moon's position</div>
-          <div className="sci-step-desc">We find exactly where the Moon was in the sky the moment you were born.</div>
-        </div>
-        <div>
-          <div className="sci-step-num">02 · YOUR BIRTH STAR</div>
-          <div className="sci-step-label">Your birth star</div>
-          <div className="sci-step-desc">That position falls in one of 27 nakshatras, each with its own deity, energy, and syllables.</div>
-        </div>
-        <div>
-          <div className="sci-step-num">03 · YOUR NAME SYLLABLE</div>
-          <div className="sci-step-label">Your name syllable</div>
-          <div className="sci-step-desc">The specific quarter (pada) of your nakshatra gives the sacred starting syllable for your name.</div>
-        </div>
-      </div>
-      <button className="sci-toggle-btn" onClick={onGoDeeper}>Go deeper →</button>
-    </>
-  );
-}
-
-function ScienceDetailed({ onShowLess }) {
-  return (
-    <>
-      <h1 className="page-title">The astronomy behind it.</h1>
-      <p className="page-subtitle" style={{ marginBottom: '2.5rem' }}>
-        A closer look at the calculation, the tradition, and the evidence behind it.
       </p>
       <div className="sci-sections">
         <div>
@@ -687,19 +658,14 @@ function ScienceDetailed({ onShowLess }) {
           </div>
         </div>
       </div>
-      <button className="sci-toggle-btn" onClick={onShowLess}>← Show less</button>
     </>
   );
 }
 
 function ScienceTab() {
-  const [view, setView] = useState('simple');
   return (
     <div className="page page-full">
-      {view === 'simple'
-        ? <ScienceSimple onGoDeeper={() => setView('detailed')} />
-        : <ScienceDetailed onShowLess={() => setView('simple')} />
-      }
+      <ScienceContent />
     </div>
   );
 }
@@ -736,41 +702,39 @@ function AskTab() {
   };
 
   return (
-    <div className="page">
+    <div className="page page-wide">
       <h1 className="page-title">Have a question?</h1>
       <p className="page-subtitle">Ask anything about nakshatras, Vedic astrology, or how this works.<br />We'll get back to you.</p>
-      <div className="card">
-        <form onSubmit={submit}>
-          <div className="form-stack">
-            <div className="form-group">
-              <label>Name</label>
-              <input type="text" placeholder="Your name" value={contact.name} onChange={e => updateContact('name', e.target.value)} required />
-            </div>
-            <div className="form-group">
-              <label>Email</label>
-              <input type="email" placeholder="you@example.com" value={contact.email} onChange={e => updateContact('email', e.target.value)} required />
-            </div>
-            <div className="form-group">
-              <label>Question</label>
-              <textarea
-                placeholder="What would you like to know?"
-                value={contact.message}
-                onChange={e => {
-                  updateContact('message', e.target.value);
-                  e.target.style.height = 'auto';
-                  e.target.style.height = e.target.scrollHeight + 'px';
-                }}
-                required
-              />
-            </div>
+      <form onSubmit={submit}>
+        <div className="form-stack">
+          <div className="form-group">
+            <label>Name</label>
+            <input type="text" placeholder="Your name" value={contact.name} onChange={e => updateContact('name', e.target.value)} required />
           </div>
-          <button type="submit" className="btn" disabled={submitting}>
-            {submitting ? 'Sending...' : 'Send question'}
-          </button>
-        </form>
-        {status === 'success' && <div className="contact-success">Your question has been received. We'll be in touch.</div>}
-        {status === 'error' && <div className="error">Something went wrong. Please try again.</div>}
-      </div>
+          <div className="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="you@example.com" value={contact.email} onChange={e => updateContact('email', e.target.value)} required />
+          </div>
+          <div className="form-group">
+            <label>Question</label>
+            <textarea
+              placeholder="What would you like to know?"
+              value={contact.message}
+              onChange={e => {
+                updateContact('message', e.target.value);
+                e.target.style.height = 'auto';
+                e.target.style.height = e.target.scrollHeight + 'px';
+              }}
+              required
+            />
+          </div>
+        </div>
+        <button type="submit" className="btn" disabled={submitting}>
+          {submitting ? 'Sending...' : 'Send question'}
+        </button>
+      </form>
+      {status === 'success' && <div className="contact-success">Your question has been received. We'll be in touch.</div>}
+      {status === 'error' && <div className="error">Something went wrong. Please try again.</div>}
     </div>
   );
 }
@@ -879,123 +843,140 @@ export default function App() {
     // Step 1: Date
     if (step === 1) return (
       <>
-        <p className="step-question">When were you born?</p>
-        <div className="multi-select-row" style={{ marginBottom: '1.5rem' }}>
-          <select value={form.dateMonth} onChange={e => update('dateMonth', e.target.value)}>
-            <option value="">Month</option>
-            {MONTHS.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
-          </select>
-          <select value={form.dateDay} onChange={e => update('dateDay', e.target.value)}>
-            <option value="">Day</option>
-            {Array.from({ length: 31 }, (_, i) => i + 1).map(d => <option key={d} value={d}>{d}</option>)}
-          </select>
-          <select value={form.dateYear} onChange={e => update('dateYear', e.target.value)}>
-            <option value="">Year</option>
-            {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
-          </select>
+        <div className="step-body">
+          <p className="step-question">When were you born?</p>
+          <div className="multi-select-row">
+            <select value={form.dateMonth} onChange={e => update('dateMonth', e.target.value)}>
+              <option value="">Month</option>
+              {MONTHS.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
+            </select>
+            <select value={form.dateDay} onChange={e => update('dateDay', e.target.value)}>
+              <option value="">Day</option>
+              {Array.from({ length: 31 }, (_, i) => i + 1).map(d => <option key={d} value={d}>{d}</option>)}
+            </select>
+            <select value={form.dateYear} onChange={e => update('dateYear', e.target.value)}>
+              <option value="">Year</option>
+              {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+            </select>
+          </div>
         </div>
-        <button className="btn" onClick={() => setStep(2)} disabled={!canStep1}>Continue</button>
+        <div className="step-actions">
+          <button className="btn" onClick={() => setStep(2)} disabled={!canStep1}>Continue</button>
+        </div>
       </>
     );
 
     // Step 2: Time
     if (step === 2) return (
       <>
-        <p className="step-question">What time were you born?</p>
-        <div className="time-pills">
-          {TIME_PERIODS.map(p => (
-            <button
-              key={p.id}
-              className={`time-pill${form.timePeriod === p.id ? ' selected' : ''}`}
-              onClick={() => update('timePeriod', p.id)}
-            >
-              {p.label}
-            </button>
-          ))}
-        </div>
-
-        {form.timePeriod === 'unknown' && (
-          <div className="step-note">
-            We'll use noon as default. Results may be slightly less accurate.
-          </div>
-        )}
-
-        {form.timePeriod && form.timePeriod !== 'unknown' && (
-          <div className="optional-section">
-            <div className="optional-label">Exact time (optional)</div>
-            <div className="time-picker-row">
-              <ScrollPicker
-                values={HOURS}
-                selected={form.timeHour || '12'}
-                onChange={v => update('timeHour', v)}
-              />
-              <div className="time-sep">:</div>
-              <ScrollPicker
-                values={MINUTES}
-                selected={form.timeMinute}
-                onChange={v => update('timeMinute', v)}
-              />
+        <div className="step-body">
+          <p className="step-question">What time were you born?</p>
+          <div className="time-pills">
+            {TIME_PERIODS.map(p => (
               <button
-                type="button"
-                className="ampm-btn"
-                onClick={() => update('timeAmPm', form.timeAmPm === 'AM' ? 'PM' : 'AM')}
+                key={p.id}
+                className={`time-pill${form.timePeriod === p.id ? ' selected' : ''}`}
+                onClick={() => update('timePeriod', p.id)}
               >
-                {form.timeAmPm}
+                {p.label}
               </button>
-            </div>
+            ))}
           </div>
-        )}
 
-        <button className="back-btn" onClick={() => setStep(1)}>← Back</button>
-        <button className="btn" onClick={() => setStep(3)} disabled={!canStep2}>Continue</button>
+          {form.timePeriod === 'unknown' && (
+            <div className="step-note">
+              We'll use noon as default. Results may be slightly less accurate.
+            </div>
+          )}
+
+          {form.timePeriod && form.timePeriod !== 'unknown' && (
+            <div className="optional-section">
+              <div className="optional-label">Exact time (optional)</div>
+              <div className="time-picker-row">
+                <ScrollPicker
+                  values={HOURS}
+                  selected={form.timeHour || '12'}
+                  onChange={v => update('timeHour', v)}
+                />
+                <div className="time-sep">:</div>
+                <ScrollPicker
+                  values={MINUTES}
+                  selected={form.timeMinute}
+                  onChange={v => update('timeMinute', v)}
+                />
+                <button
+                  type="button"
+                  className="ampm-btn"
+                  onClick={() => update('timeAmPm', form.timeAmPm === 'AM' ? 'PM' : 'AM')}
+                >
+                  {form.timeAmPm}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="step-actions">
+          <button className="back-btn" onClick={() => setStep(1)}>← Back</button>
+          <button className="btn" onClick={() => setStep(3)} disabled={!canStep2}>Continue</button>
+        </div>
       </>
     );
 
     // Step 3: Location
     if (step === 3) return (
       <>
-        <p className="step-question">Where were you born?</p>
-        <div className="form-stack" style={{ marginBottom: '1.5rem' }}>
-          <div className="form-group">
-            <label>Country</label>
-            <select value={form.country} onChange={e => { update('country', e.target.value); update('state', ''); }}>
-              <option value="">Select country</option>
-              {COUNTRY_LIST.map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
-            </select>
-          </div>
-          {form.country && (
+        <div className="step-body">
+          <p className="step-question">Where were you born?</p>
+          <div className="form-stack">
             <div className="form-group">
-              <label>State / Province</label>
-              <select value={form.state} onChange={e => update('state', e.target.value)}>
-                <option value="">Select state / province</option>
-                {states.map((s, i) => <option key={i} value={i}>{s.name}</option>)}
+              <label>Country</label>
+              <select value={form.country} onChange={e => { update('country', e.target.value); update('state', ''); }}>
+                <option value="">Select country</option>
+                {COUNTRY_LIST.map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
               </select>
             </div>
-          )}
+            {form.country && (
+              <div className="form-group">
+                <label>State / Province</label>
+                <select value={form.state} onChange={e => update('state', e.target.value)}>
+                  <option value="">Select state / province</option>
+                  {states.map((s, i) => <option key={i} value={i}>{s.name}</option>)}
+                </select>
+              </div>
+            )}
+          </div>
         </div>
-        <button className="back-btn" onClick={() => setStep(2)}>← Back</button>
-        <button className="btn" onClick={() => setStep(4)} disabled={!canStep3}>Continue</button>
+        <div className="step-actions">
+          <button className="back-btn" onClick={() => setStep(2)}>← Back</button>
+          <button className="btn" onClick={() => setStep(4)} disabled={!canStep3}>Continue</button>
+        </div>
       </>
     );
 
     // Step 4: Gender
     if (step === 4) return (
       <>
-        <p className="step-question">What names are you looking for?</p>
-        {loading ? (
-          <CelestialLoader message="Calculating your nakshatra" />
-        ) : (
-          <div className="gender-pills">
-            <button className="gender-pill" onClick={() => { update('gender', 'male'); calculate('male'); }}>
-              Male
-            </button>
-            <button className="gender-pill" onClick={() => { update('gender', 'female'); calculate('female'); }}>
-              Female
-            </button>
+        <div className="step-body">
+          <p className="step-question">What names are you looking for?</p>
+          {loading ? (
+            <CelestialLoader message="Calculating your nakshatra" />
+          ) : (
+            <div className="gender-pills">
+              <button className="gender-pill" onClick={() => { update('gender', 'male'); calculate('male'); }}>
+                Male
+              </button>
+              <button className="gender-pill" onClick={() => { update('gender', 'female'); calculate('female'); }}>
+                Female
+              </button>
+            </div>
+          )}
+          {error && <div className="error" style={{ marginTop: '1rem' }}>{error}</div>}
+        </div>
+        {!loading && (
+          <div className="step-actions">
+            <button className="back-btn" onClick={() => setStep(3)}>← Back</button>
           </div>
         )}
-        {!loading && <button className="back-btn" style={{ marginTop: '1.25rem' }} onClick={() => setStep(3)}>← Back</button>}
-        {error && <div className="error" style={{ marginTop: '1rem' }}>{error}</div>}
       </>
     );
   };
@@ -1085,21 +1066,20 @@ export default function App() {
 
 
       {tab === 'generator' && (
-        <div className="page">
-          <h1 className="page-title">Discover your <span className="hl-wrap">birth star<svg className="hl-stroke" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true"><path d="M0 5.5 C18 3.5 36 7 54 5 C72 3 88 6.5 100 4.5" fill="none" stroke="#7F6FDB" strokeWidth="2" strokeLinecap="round" opacity="0.7"/></svg></span>.</h1>
-          <p className="page-subtitle">Find your birth star and the sacred syllables for naming.</p>
-
+        <div className="page page-wide">
           {!result ? (
-            <>
-              <div className="progress-dots">
-                {[1, 2, 3, 4].map(s => (
-                  <div key={s} className={`progress-dot${step >= s ? ' done' : ''}`} />
-                ))}
+            <div className="step-screen">
+              <div className="step-top">
+                <div className="progress-dots">
+                  {[1, 2, 3, 4].map(s => (
+                    <div key={s} className={`progress-dot${step >= s ? ' done' : ''}`} />
+                  ))}
+                </div>
+                <div key={step} className="step-fade">
+                  {renderStep()}
+                </div>
               </div>
-              <div key={step} className="step-fade">
-                {renderStep()}
-              </div>
-            </>
+            </div>
           ) : (
             renderResult()
           )}
