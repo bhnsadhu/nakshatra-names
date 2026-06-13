@@ -1031,34 +1031,25 @@ export default function App() {
 
       {tab === 'generator' && (
         <div className="page">
-          <div className="headline-wrap">
-            <svg className="hero-crescent" viewBox="0 0 32 44" width="24" height="34" aria-hidden="true">
-              <path d="M18 4C5 8 3 17 3.5 23C4 31 9 39 17.5 42C24 39.5 28 33 27 22C25.5 12 22 7 18 4Z"
-                fill="none" stroke="#9B8FDB" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            <h1 className="page-title">Discover your <span className="hl">birth star</span>.</h1>
-          </div>
+          <h1 className="page-title">Discover your birth star.</h1>
           <p className="page-subtitle">Find the nakshatra at your moment of birth and the sacred syllables for naming.</p>
 
           {!result ? (
-            <div className="card">
-              <div className="progress-bar">
+            <>
+              <div className="progress-dots">
                 {[1, 2, 3, 4].map(s => (
-                  <div key={s} className={`progress-seg${step >= s ? ' done' : ''}`} />
+                  <div key={s} className={`progress-dot${step >= s ? ' done' : ''}`} />
                 ))}
               </div>
               <div key={step} className="step-fade">
                 {renderStep()}
               </div>
-            </div>
+            </>
           ) : (
             renderResult()
           )}
         </div>
       )}
-      <footer className="app-footer">
-        <p>Made with intention</p>
-      </footer>
     </div>
   );
 }
