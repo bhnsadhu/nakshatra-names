@@ -478,7 +478,7 @@ const COUNTRY_LIST = Object.entries(GEO_DATA)
   .map(([code, d]) => ({ code, name: d.name }))
   .sort((a, b) => a.name.localeCompare(b.name));
 
-// ── CALCULATION (unchanged) ───────────────────────────────────────────────────
+// ── CALCULATION ───────────────────────────────────────────────────────────────
 
 const LAHIRI_AYANAMSA_2000 = 23.85;
 const AYANAMSA_RATE = 50.3 / 3600;
@@ -545,7 +545,7 @@ async function generateNames(nakshatra, gender) {
   return data.names;
 }
 
-// ── SCROLL PICKER ────────────────────────────────────────────────────────────
+// ── SCROLL PICKER ─────────────────────────────────────────────────────────────
 
 const ITEM_H = 38;
 
@@ -591,7 +591,7 @@ function ScrollPicker({ values, selected, onChange }) {
   );
 }
 
-// ── CELESTIAL LOADER ─────────────────────────────────────────────────────────
+// ── CELESTIAL LOADER ──────────────────────────────────────────────────────────
 
 function CelestialLoader({ message = 'Calculating your nakshatra' }) {
   return (
@@ -606,59 +606,78 @@ function CelestialLoader({ message = 'Calculating your nakshatra' }) {
   );
 }
 
-// ── SCIENCE TAB ──────────────────────────────────────────────────────────────
+// ── SCIENCE TAB ───────────────────────────────────────────────────────────────
 
 function ScienceContent() {
   return (
-    <>
-      <h1 className="page-title">Why this works.</h1>
-      <p className="sci-intro">
-        Nakshatra naming is a 3,000-year-old Vedic tradition. Your birth star is determined by the Moon's position when you were born. It points to a set of sacred syllables. Names starting with those syllables are believed to carry the energy of your star.
-      </p>
-      <div className="sci-sections">
-        <div>
-          <div className="sci-section-num">01 · WHAT IS A NAKSHATRA</div>
-          <div className="sci-section-title">What is a nakshatra</div>
-          <div className="sci-section-body">
-            The sky is divided into 27 lunar mansions (nakshatras), each spanning exactly 13°20' of the zodiac. The Moon traverses one nakshatra roughly every 24 hours, completing the full cycle in 27.3 days, the same period as a sidereal month. Each nakshatra is presided over by a specific deity and planetary ruler, and carries a distinct quality or energy that Vedic tradition holds to be imprinted on a person born under it.
+    <div className="sci-page">
+      <div className="sci-header">
+        <h1 className="sci-headline">Why this works.</h1>
+        <p className="sci-lead">
+          Nakshatra naming is a 3,000-year-old Vedic tradition. Your birth star is determined by the Moon's position when you were born. It points to a set of sacred syllables — names starting with those syllables are believed to carry the energy of your star.
+        </p>
+      </div>
+
+      <div className="sci-rule" />
+
+      <div className="sci-entries">
+        <div className="sci-entry">
+          <div className="sci-entry-num">01</div>
+          <div className="sci-entry-content">
+            <h2 className="sci-entry-title">What is a nakshatra</h2>
+            <p className="sci-entry-body">
+              The sky is divided into 27 lunar mansions (nakshatras), each spanning exactly 13°20' of the zodiac. The Moon traverses one nakshatra roughly every 24 hours, completing the full cycle in 27.3 days — the same period as a sidereal month. Each nakshatra is presided over by a specific deity and planetary ruler, and carries a distinct quality or energy that Vedic tradition holds to be imprinted on a person born under it.
+            </p>
           </div>
         </div>
-        <div>
-          <div className="sci-section-num">02 · THE CALCULATION</div>
-          <div className="sci-section-title">The calculation</div>
-          <div className="sci-section-body">
-            This app uses the Chapront lunar theory (1988), which models the Moon's position to within 1 arcminute of accuracy for historical dates. To convert from the tropical (Western) zodiac to the sidereal (Vedic) zodiac, it applies the Lahiri ayanamsha, the official ayanamsha adopted by the Government of India in 1955 for the Indian National Calendar. The current value is approximately 23.85° at the J2000 epoch, precessing at 50.3 arcseconds per year.
+
+        <div className="sci-entry">
+          <div className="sci-entry-num">02</div>
+          <div className="sci-entry-content">
+            <h2 className="sci-entry-title">The calculation</h2>
+            <p className="sci-entry-body">
+              This app uses the Chapront lunar theory (1988), which models the Moon's position to within 1 arcminute of accuracy for historical dates. To convert from the tropical (Western) zodiac to the sidereal (Vedic) zodiac, it applies the Lahiri ayanamsha — the official ayanamsha adopted by the Government of India in 1955 for the Indian National Calendar. The current value is approximately 23.85° at the J2000 epoch, precessing at 50.3 arcseconds per year.
+            </p>
           </div>
         </div>
-        <div>
-          <div className="sci-section-num">03 · THE EVIDENCE</div>
-          <div className="sci-section-title">The evidence</div>
-          <div className="sci-section-body">
-            The Lahiri ayanamsha has been independently verified by modern astronomical software including Swiss Ephemeris, the gold standard used by professional astrologers and researchers worldwide. The Moon's position calculation used here matches within 0.5 degrees of NASA JPL Horizons system outputs for historical dates, well within the precision needed to determine nakshatra and pada correctly. The nakshatra-pada syllable mapping is consistent across all major Vedic texts: the Brihat Parashara Hora Shastra, the Brihat Jataka by Varahamihira, and the Muhurta Chintamani. These are independent works from different centuries that agree on the syllable assignments without exception.
+
+        <div className="sci-entry">
+          <div className="sci-entry-num">03</div>
+          <div className="sci-entry-content">
+            <h2 className="sci-entry-title">The evidence</h2>
+            <p className="sci-entry-body">
+              The Lahiri ayanamsha has been independently verified by modern astronomical software including Swiss Ephemeris, the gold standard used by professional astrologers and researchers worldwide. The Moon's position calculation used here matches within 0.5 degrees of NASA JPL Horizons system outputs for historical dates — well within the precision needed to determine nakshatra and pada correctly. The nakshatra-pada syllable mapping is consistent across all major Vedic texts: the Brihat Parashara Hora Shastra, the Brihat Jataka by Varahamihira, and the Muhurta Chintamani. These are independent works from different centuries that agree on the syllable assignments without exception.
+            </p>
           </div>
         </div>
-        <div>
-          <div className="sci-section-num">04 · NAMING TRADITION</div>
-          <div className="sci-section-title">Naming tradition</div>
-          <div className="sci-section-body">
-            The tradition is rooted in the Brihat Parashara Hora Shastra, the foundational text of Vedic astrology. Each nakshatra is divided into four padas (quarters), each corresponding to a specific starting syllable (108 syllables in total across all 27 nakshatras). A child named with their nakshatra's pada syllable is believed to harmonise with the cosmic energy present at the moment of their birth, aligning their identity with the qualities of their birth star.
+
+        <div className="sci-entry">
+          <div className="sci-entry-num">04</div>
+          <div className="sci-entry-content">
+            <h2 className="sci-entry-title">Naming tradition</h2>
+            <p className="sci-entry-body">
+              The tradition is rooted in the Brihat Parashara Hora Shastra, the foundational text of Vedic astrology. Each nakshatra is divided into four padas (quarters), each corresponding to a specific starting syllable — 108 syllables in total across all 27 nakshatras. A child named with their nakshatra's pada syllable is believed to harmonise with the cosmic energy present at the moment of their birth, aligning their identity with the qualities of their birth star.
+            </p>
           </div>
         </div>
-        <div>
-          <div className="sci-section-num">05 · SOURCES</div>
-          <div className="sci-section-title">Sources</div>
-          <div className="sci-sources">
-            <div className="sci-source-item">Brihat Parashara Hora Shastra (classical Vedic text, multiple translations)</div>
-            <div className="sci-source-item">Brihat Jataka by Varahamihira (6th century CE)</div>
-            <div className="sci-source-item">Muhurta Chintamani (classical Vedic text)</div>
-            <div className="sci-source-item">Government of India Lahiri Ayanamsha Standard (1955)</div>
-            <div className="sci-source-item">Chapront Lunar Theory, Chapront-Touze &amp; Chapront (1988)</div>
-            <div className="sci-source-item">Swiss Ephemeris by Astrodienst AG</div>
-            <div className="sci-source-item">NASA JPL Horizons System</div>
+
+        <div className="sci-entry sci-entry-last">
+          <div className="sci-entry-num">05</div>
+          <div className="sci-entry-content">
+            <h2 className="sci-entry-title">Sources</h2>
+            <ul className="sci-sources">
+              <li>Brihat Parashara Hora Shastra <span className="sci-source-note">(classical Vedic text, multiple translations)</span></li>
+              <li>Brihat Jataka by Varahamihira <span className="sci-source-note">(6th century CE)</span></li>
+              <li>Muhurta Chintamani <span className="sci-source-note">(classical Vedic text)</span></li>
+              <li>Government of India Lahiri Ayanamsha Standard <span className="sci-source-note">(1955)</span></li>
+              <li>Chapront Lunar Theory, Chapront-Touze &amp; Chapront <span className="sci-source-note">(1988)</span></li>
+              <li>Swiss Ephemeris by Astrodienst AG</li>
+              <li>NASA JPL Horizons System</li>
+            </ul>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -670,76 +689,7 @@ function ScienceTab() {
   );
 }
 
-// ── ASK TAB ──────────────────────────────────────────────────────────────────
-
-function AskTab() {
-  const [contact, setContact] = useState({ name: '', email: '', message: '' });
-  const [submitting, setSubmitting] = useState(false);
-  const [status, setStatus] = useState(null);
-
-  const updateContact = (k, v) => setContact(c => ({ ...c, [k]: v }));
-
-  const submit = async (e) => {
-    e.preventDefault();
-    setSubmitting(true);
-    setStatus(null);
-    try {
-      const res = await fetch('https://formspree.io/f/mnjyzzgv', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ name: contact.name, email: contact.email, message: contact.message })
-      });
-      if (res.ok) {
-        setStatus('success');
-        setContact({ name: '', email: '', message: '' });
-      } else {
-        setStatus('error');
-      }
-    } catch {
-      setStatus('error');
-    }
-    setSubmitting(false);
-  };
-
-  return (
-    <div className="page">
-      <h1 className="page-title">Have a question?</h1>
-      <p className="page-subtitle">Ask anything about nakshatras, Vedic astrology, or how this works.<br />We'll get back to you.</p>
-      <form onSubmit={submit}>
-        <div className="form-stack">
-          <div className="form-group">
-            <label>Name</label>
-            <input type="text" placeholder="Your name" value={contact.name} onChange={e => updateContact('name', e.target.value)} required />
-          </div>
-          <div className="form-group">
-            <label>Email</label>
-            <input type="email" placeholder="you@example.com" value={contact.email} onChange={e => updateContact('email', e.target.value)} required />
-          </div>
-          <div className="form-group">
-            <label>Question</label>
-            <textarea
-              placeholder="What would you like to know?"
-              value={contact.message}
-              onChange={e => {
-                updateContact('message', e.target.value);
-                e.target.style.height = 'auto';
-                e.target.style.height = e.target.scrollHeight + 'px';
-              }}
-              required
-            />
-          </div>
-          <button type="submit" className="btn" disabled={submitting}>
-            {submitting ? 'Sending...' : 'Send question'}
-          </button>
-        </div>
-      </form>
-      {status === 'success' && <div className="contact-success">Your question has been received. We'll be in touch.</div>}
-      {status === 'error' && <div className="error">Something went wrong. Please try again.</div>}
-    </div>
-  );
-}
-
-// ── MAIN APP ─────────────────────────────────────────────────────────────────
+// ── MAIN APP ──────────────────────────────────────────────────────────────────
 
 const BLANK_FORM = {
   dateMonth: '', dateDay: '', dateYear: '',
@@ -831,7 +781,7 @@ export default function App() {
     setLoadingNames(false);
   };
 
-  // ── Step renderers ──────────────────────────────────────────────────────────
+  // ── Step renderers ─────────────────────────────────────────────────────────
 
   const canStep1 = form.dateMonth && form.dateDay && form.dateYear;
   const canStep2 = !!form.timePeriod;
@@ -840,7 +790,6 @@ export default function App() {
   const states = form.country ? GEO_DATA[form.country]?.states || [] : [];
 
   const renderStep = () => {
-    // Step 1: Date
     if (step === 1) return (
       <>
         <div className="step-body">
@@ -866,7 +815,6 @@ export default function App() {
       </>
     );
 
-    // Step 2: Time
     if (step === 2) return (
       <>
         <div className="step-body">
@@ -922,7 +870,6 @@ export default function App() {
       </>
     );
 
-    // Step 3: Location
     if (step === 3) return (
       <>
         <div className="step-body">
@@ -953,7 +900,6 @@ export default function App() {
       </>
     );
 
-    // Step 4: Gender
     if (step === 4) return (
       <>
         <div className="step-body">
@@ -981,7 +927,7 @@ export default function App() {
     );
   };
 
-  // ── Result view ─────────────────────────────────────────────────────────────
+  // ── Result view ────────────────────────────────────────────────────────────
 
   const renderResult = () => (
     <>
@@ -1028,17 +974,17 @@ export default function App() {
             <span className="sparkle sparkle-outer">✦</span>
           </div>
           <div className="card">
-          <div className="names-title">Name suggestions for {result.nakshatra.name}</div>
-          {loadingNames && <CelestialLoader message="Generating names" />}
-          {names.map((n, i) => (
-            <div key={i} className="name-item">
-              <div className="name-text">{n.name}</div>
-              <div className="name-meaning">{n.meaning}</div>
-            </div>
-          ))}
-          {names.length > 0 && (
-            <button className="regen-btn" onClick={regenerate}>Suggest different names</button>
-          )}
+            <div className="names-title">Name suggestions for {result.nakshatra.name}</div>
+            {loadingNames && <CelestialLoader message="Generating names" />}
+            {names.map((n, i) => (
+              <div key={i} className="name-item">
+                <div className="name-text">{n.name}</div>
+                <div className="name-meaning">{n.meaning}</div>
+              </div>
+            ))}
+            {names.length > 0 && (
+              <button className="regen-btn" onClick={regenerate}>Suggest different names</button>
+            )}
           </div>
         </>
       )}
@@ -1048,7 +994,7 @@ export default function App() {
     </>
   );
 
-  // ── Layout ──────────────────────────────────────────────────────────────────
+  // ── Layout ─────────────────────────────────────────────────────────────────
 
   return (
     <div className="app">
@@ -1057,13 +1003,10 @@ export default function App() {
         <div className="tab-pills">
           <button className={`tab-pill${tab === 'generator' ? ' active' : ''}`} onClick={() => setTab('generator')}>Generator</button>
           <button className={`tab-pill${tab === 'science' ? ' active' : ''}`} onClick={() => setTab('science')}>The science</button>
-          <button className={`tab-pill${tab === 'ask' ? ' active' : ''}`} onClick={() => setTab('ask')}>Ask a question</button>
         </div>
       </nav>
 
       {tab === 'science' && <ScienceTab />}
-      {tab === 'ask' && <AskTab />}
-
 
       {tab === 'generator' && (
         <div className="page">
@@ -1071,11 +1014,16 @@ export default function App() {
             <div className="step-screen">
               <div className="generator-hero">
                 <h1 className="generator-title">Discover your birth star.</h1>
-                <p className="generator-subtitle">Find your birth star and the sacred syllables for naming.</p>
+                <p className="generator-subtitle">Find your nakshatra and the sacred syllables for naming.</p>
               </div>
               <div className="step-top">
-                <div className="step-progress-bar">
-                  <div className="step-progress-fill" style={{ width: `${step * 25}%` }} />
+                <div className="step-progress-track">
+                  <div className="step-progress-segments">
+                    {[1, 2, 3, 4].map(i => (
+                      <div key={i} className={`step-segment${i <= step ? ' filled' : ''}`} />
+                    ))}
+                  </div>
+                  <div className="step-progress-label">Step {step} of 4</div>
                 </div>
                 <div key={step} className="step-fade">
                   {renderStep()}
