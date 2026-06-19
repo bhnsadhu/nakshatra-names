@@ -511,7 +511,7 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
   color: #9a9a9a;
   line-height: 1.75;
   letter-spacing: -0.15px;
-  padding-left: 60px;
+  margin-left: 60px;
 }
 
 .sci-rule {
@@ -975,7 +975,7 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
     letter-spacing: -1px;
   }
 
-  .sci-lead { font-size: 14.5px; padding-left: 44px; }
+  .sci-lead { font-size: 14.5px; margin-left: 44px; }
 
   .sci-entry {
     grid-template-columns: 30px 1fr;
