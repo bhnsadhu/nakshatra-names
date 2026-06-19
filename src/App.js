@@ -614,7 +614,7 @@ function ScienceContent() {
       <div className="sci-header">
         <h1 className="sci-headline">Why this works.</h1>
         <p className="sci-lead">
-          Nakshatra naming is a 3,000-year-old Vedic tradition. Your birth star is determined by the Moon's position when you were born. It points to a set of sacred syllables — names starting with those syllables are believed to carry the energy of your star.
+          Nakshatra naming is a 3,000-year-old Vedic tradition. Your birth star is determined by the Moon's position when you were born. It points to a set of sacred syllables. Names starting with those syllables are believed to carry the energy of your star.
         </p>
       </div>
 
@@ -626,7 +626,7 @@ function ScienceContent() {
           <div className="sci-entry-content">
             <h2 className="sci-entry-title">What is a nakshatra</h2>
             <p className="sci-entry-body">
-              The sky is divided into 27 lunar mansions (nakshatras), each spanning exactly 13°20' of the zodiac. The Moon traverses one nakshatra roughly every 24 hours, completing the full cycle in 27.3 days — the same period as a sidereal month. Each nakshatra is presided over by a specific deity and planetary ruler, and carries a distinct quality or energy that Vedic tradition holds to be imprinted on a person born under it.
+              The sky is divided into 27 lunar mansions (nakshatras), each spanning exactly 13°20' of the zodiac. The Moon traverses one nakshatra roughly every 24 hours, completing the full cycle in 27.3 days, the same period as a sidereal month. Each nakshatra is presided over by a specific deity and planetary ruler, and carries a distinct quality or energy that Vedic tradition holds to be imprinted on a person born under it.
             </p>
           </div>
         </div>
@@ -636,7 +636,7 @@ function ScienceContent() {
           <div className="sci-entry-content">
             <h2 className="sci-entry-title">The calculation</h2>
             <p className="sci-entry-body">
-              This app uses the Chapront lunar theory (1988), which models the Moon's position to within 1 arcminute of accuracy for historical dates. To convert from the tropical (Western) zodiac to the sidereal (Vedic) zodiac, it applies the Lahiri ayanamsha — the official ayanamsha adopted by the Government of India in 1955 for the Indian National Calendar. The current value is approximately 23.85° at the J2000 epoch, precessing at 50.3 arcseconds per year.
+              This app uses the Chapront lunar theory (1988), which models the Moon's position to within 1 arcminute of accuracy for historical dates. To convert from the tropical (Western) zodiac to the sidereal (Vedic) zodiac, it applies the Lahiri ayanamsha, the official ayanamsha adopted by the Government of India in 1955 for the Indian National Calendar. The current value is approximately 23.85° at the J2000 epoch, precessing at 50.3 arcseconds per year.
             </p>
           </div>
         </div>
@@ -646,7 +646,7 @@ function ScienceContent() {
           <div className="sci-entry-content">
             <h2 className="sci-entry-title">The evidence</h2>
             <p className="sci-entry-body">
-              The Lahiri ayanamsha has been independently verified by modern astronomical software including Swiss Ephemeris, the gold standard used by professional astrologers and researchers worldwide. The Moon's position calculation used here matches within 0.5 degrees of NASA JPL Horizons system outputs for historical dates — well within the precision needed to determine nakshatra and pada correctly. The nakshatra-pada syllable mapping is consistent across all major Vedic texts: the Brihat Parashara Hora Shastra, the Brihat Jataka by Varahamihira, and the Muhurta Chintamani. These are independent works from different centuries that agree on the syllable assignments without exception.
+              The Lahiri ayanamsha has been independently verified by modern astronomical software including Swiss Ephemeris, the gold standard used by professional astrologers and researchers worldwide. The Moon's position calculation used here matches within 0.5 degrees of NASA JPL Horizons system outputs for historical dates, well within the precision needed to determine nakshatra and pada correctly. The nakshatra-pada syllable mapping is consistent across all major Vedic texts: the Brihat Parashara Hora Shastra, the Brihat Jataka by Varahamihira, and the Muhurta Chintamani. These are independent works from different centuries that agree on the syllable assignments without exception.
             </p>
           </div>
         </div>
@@ -656,7 +656,7 @@ function ScienceContent() {
           <div className="sci-entry-content">
             <h2 className="sci-entry-title">Naming tradition</h2>
             <p className="sci-entry-body">
-              The tradition is rooted in the Brihat Parashara Hora Shastra, the foundational text of Vedic astrology. Each nakshatra is divided into four padas (quarters), each corresponding to a specific starting syllable — 108 syllables in total across all 27 nakshatras. A child named with their nakshatra's pada syllable is believed to harmonise with the cosmic energy present at the moment of their birth, aligning their identity with the qualities of their birth star.
+              The tradition is rooted in the Brihat Parashara Hora Shastra, the foundational text of Vedic astrology. Each nakshatra is divided into four padas (quarters), each corresponding to a specific starting syllable, for a total of 108 syllables across all 27 nakshatras. A child named with their nakshatra's pada syllable is believed to harmonise with the cosmic energy present at the moment of their birth, aligning their identity with the qualities of their birth star.
             </p>
           </div>
         </div>
