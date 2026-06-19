@@ -494,6 +494,7 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
 
 .sci-header {
   padding-bottom: 2.5rem;
+  text-align: center;
 }
 
 .sci-headline {
@@ -509,10 +510,10 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
 .sci-lead {
   font-size: 16px;
   font-weight: 400;
-  color: #7F6FDB;
+  color: #9B8FE8;
   line-height: 1.75;
   letter-spacing: -0.15px;
-  margin-left: 60px;
+  text-align: center;
 }
 
 .sci-rule {
@@ -527,9 +528,10 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
 }
 
 .sci-entry {
-  display: grid;
-  grid-template-columns: 40px 1fr;
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   padding: 2.25rem 0;
   border-bottom: 1px solid #141414;
 }
@@ -540,10 +542,14 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
   font-size: 11px;
   font-weight: 500;
   color: #2E2E2E;
-  padding-top: 4px;
   letter-spacing: 0.04em;
   font-variant-numeric: tabular-nums;
   line-height: 1;
+  margin-bottom: 14px;
+}
+
+.sci-entry-content {
+  width: 100%;
 }
 
 .sci-entry-title {
@@ -568,6 +574,7 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
   display: flex;
   flex-direction: column;
   gap: 10px;
+  align-items: center;
 }
 
 .sci-sources li {
@@ -575,16 +582,8 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
   font-weight: 400;
   color: #666;
   line-height: 1.5;
-  padding-left: 16px;
-  position: relative;
   letter-spacing: -0.05px;
-}
-
-.sci-sources li::before {
-  content: '–';
-  position: absolute;
-  left: 0;
-  color: #2E2E2E;
+  text-align: center;
 }
 
 .sci-source-note {
@@ -976,13 +975,9 @@ textarea { resize: none; min-height: 80px; overflow: hidden; }
     letter-spacing: -1px;
   }
 
-  .sci-lead { font-size: 14.5px; margin-left: 44px; }
+  .sci-lead { font-size: 14.5px; }
 
-  .sci-entry {
-    grid-template-columns: 30px 1fr;
-    gap: 14px;
-    padding: 1.75rem 0;
-  }
+  .sci-entry { padding: 1.75rem 0; }
 
   .sci-entry-title { font-size: 16px; }
 
